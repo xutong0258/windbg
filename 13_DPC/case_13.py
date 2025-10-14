@@ -8,8 +8,7 @@ path_dir = os.path.dirname(__file__)
 
 
 if __name__ == '__main__':
-    src_dir = r'G:\BSOD_Debug_SOP_0911\13. DPC 0x133\13.1 0x133 0 Disk IO'
-
+    src_dir = r'G:\BSOD_Debug_SOP_0911\13. DPC 0x133\13.2 0x133 0 Realtek WLAN NDIS OID'
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
     log_file = os.path.join(path_dir, 'tmp.log')
     result_dict = {}
@@ -18,35 +17,34 @@ if __name__ == '__main__':
     if not windbg.start(target=dump_file):
         assert ('FAIL')
 
-    step_dict = {}
-    Automatic_dict = {}
-    total_dict = {}
-    debug_data_dict = {}
-
-    # 1. Automatic
-    logger.info(f'1.Automatic')
-    analyze_v_run(Automatic_dict, current_step=1)
-    total_dict['Automatic Analysis'] = Automatic_dict
-
-    debug_dict = update_Automatic_dict(Automatic_dict)
-    debug_data_dict['Automatic Analysis'] = debug_dict
-
-
-    BUGCHECK_CODE = Automatic_dict['BUGCHECK_CODE']
-    BUGCHECK_P1 = Automatic_dict['BUGCHECK_P1']
-
-    logger.info(f'BUGCHECK_CODE: {BUGCHECK_CODE}')
-    logger.info(f'BUGCHECK_P1: {BUGCHECK_P1}')
-    MODULE_NAME = Automatic_dict['MODULE_NAME']
-    if BUGCHECK_CODE == '133':
+    try:
         step_dict = {}
-        step_dict['BSOD_Supcious_Driver'] = MODULE_NAME
-        logger.info(f'13.dpc')
-        dpc_run(step_dict, Automatic_dict, current_step=13)
+        Automatic_dict = {}
+        total_dict = {}
+        debug_data_dict_str = ''
 
-        total_dict['dpc'] = step_dict
+        # 1. Automatic
+        logger.info(f'1.Automatic')
+        analyze_v_run(Automatic_dict, current_step=1)
+        total_dict['Automatic Analysis'] = Automatic_dict
 
-    windbg.stop(path_dir)
+        step_dict_str = update_Automatic_dict_str(Automatic_dict)
+        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
 
-    dump_result_yaml(total_dict, debug_data_dict, path_dir)
-    pass
+        BUGCHECK_CODE = Automatic_dict.get('BUGCHECK_CODE', None)
+        BUGCHECK_P1 = Automatic_dict.get('BUGCHECK_P1', None)
+        BUGCHECK_P2 = Automatic_dict.get('BUGCHECK_P2', None)
+        MODULE_NAME = Automatic_dict.get('MODULE_NAME', None)
+
+        # 13. DPC_0x133
+        if BUGCHECK_CODE == '133':
+            step_dict = {}
+            step_dict['BSOD_Supcious_Driver'] = MODULE_NAME
+            logger.info(f'13.dpc')
+            dpc_run(step_dict, Automatic_dict, current_step=13)
+
+            total_dict['dpc'] = step_dict
+    finally:
+        windbg.stop(path_dir)
+
+    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)

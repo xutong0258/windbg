@@ -14,15 +14,17 @@ def dpc_run(result_dict, Automatic_dict, current_step):
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
     update_context(cmd_output, result_dict, 'swd_DPCTimeout_Context')
 
+    swd_DPCTimeout_CPU = None
     if cmd_output:
         cmd_output_list = cmd_output.splitlines()
         Bugcheck_P1 = Automatic_dict['BUGCHECK_P1']
+        logger.info(f'Bugcheck_P1: {Bugcheck_P1}')
         if Bugcheck_P1 == '0':
             swd_DPCTimeout_CPU = fileOP.get_swd_DPCTimeout_CPU_P1_0(cmd_output_list)
         elif Bugcheck_P1 == '1':
             swd_DPCTimeout_CPU = fileOP.get_swd_DPCTimeout_CPU_P1_1(cmd_output_list)
-        logger.info(f'swd_DPCTimeout_CPU: {swd_DPCTimeout_CPU}')
-        result_dict['swd_DPCTimeout_CPU'] = swd_DPCTimeout_CPU
+    logger.info(f'swd_DPCTimeout_CPU: {swd_DPCTimeout_CPU}')
+    result_dict['swd_DPCTimeout_CPU'] = swd_DPCTimeout_CPU
 
     cmd = "!dpcwatchdog"
     logger.info(f'cmd: {cmd}')
@@ -31,7 +33,8 @@ def dpc_run(result_dict, Automatic_dict, current_step):
 
 
     swd_DPCTimeout_CPU = result_dict.get('swd_DPCTimeout_CPU', None)
-    if swd_DPCTimeout_CPU:
+    logger.info(f'swd_DPCTimeout_CPU: {swd_DPCTimeout_CPU}')
+    if swd_DPCTimeout_CPU is not None:
         cmd = f"~{swd_DPCTimeout_CPU}"
         logger.info(f'cmd: {cmd}')
         cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
@@ -76,37 +79,18 @@ def PnP_run(result_dict, current_step):
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
 
-    blocked_IRP_Address_status = result_dict.get('blocked_IRP_Address_status', None)
+    PnP_blocked_IRP_address_status = result_dict.get('PnP_blocked_IRP_address_status', None)
 
     PnP_Status_Abnormal = 0
-    if blocked_IRP_Address_status or Pending_Removal_Status:
+    if PnP_blocked_IRP_address_status or Pending_Removal_Status:
         PnP_Status_Abnormal = 1
 
     result_dict['PnP_Status_Abnormal'] = PnP_Status_Abnormal
     return
 
-def PnP_6_run(result_dict, current_step):
-    cmd = "!pnptriage"
-    logger.info(f'cmd: {cmd}')
-    cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
+def storage_run(result_dict, Automatic_dict,current_step):
+    BUGCHECK_CODE = Automatic_dict.get('BUGCHECK_CODE', None)
 
-    cmd = "!devnode 1"
-    logger.info(f'cmd: {cmd}')
-    cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
-    cmd_output_list = cmd_output.splitlines()
-    count = get_list_text_count(cmd_output_list, 'Pending Removal')
-    Pending_Removal_Status = 0
-    if count:
-        Pending_Removal_Status = 1
-        result_dict['Pending_Removal_Context'] = cmd_output
-    result_dict['pending_Removal_status'] = Pending_Removal_Status
-
-    cmd = "!devnode 0 1"
-    logger.info(f'cmd: {cmd}')
-    cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
-    return
-
-def storage_run(result_dict, current_step):
     cmd = ".load storagekd "
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
@@ -157,6 +141,7 @@ def storage_run(result_dict, current_step):
 
 
     # !storadapter storadapter_adapter2_address
+    result_dict['storadapter_adapter2_SurpriseRemoval_Status'] = 0
     storadapter_adapter2_address = result_dict.get('storadapter_adapter2_address', None)
     logger.info(f'storadapter_adapter2_address: {storadapter_adapter2_address}')
     if storadapter_adapter2_address:
@@ -170,6 +155,7 @@ def storage_run(result_dict, current_step):
     storadapter_storunit1_address = result_dict.get('storadapter_storunit1_address', None)
     logger.info(f'storadapter_storunit1_address: {storadapter_storunit1_address}')
     storadapter_storunit1_Outstanding_IRP_Status = 0
+    storadapter_storunit2_Outstanding_IRP_Status = 0
 
     if storadapter_storunit1_address:
         cmd = f"!storunit {storadapter_storunit1_address}"
@@ -183,13 +169,16 @@ def storage_run(result_dict, current_step):
         end_text = '[Completed Requests]'
         result = fileOP.get_text_with_start_and_end(cmd_output_list, start_text, end_text)
 
-        first_index = get_list_text_line_first_index(cmd_output_list, 'ffff')
+        # logger.info(f'result: {result}')
+
+        first_index = get_list_text_line_first_index(result, 'ffff')
 
         # logger.info(f'first_index: {first_index}')
         if first_index:
             result_dict['storadapter_storunit1_Outstanding_IRP_Context'] = cmd_output_list[first_index: first_index + 6]
             storadapter_storunit1_Outstanding_IRP_Status = 1
-        result_dict['storadapter_storunit1_Outstanding_IRP_Status'] = storadapter_storunit1_Outstanding_IRP_Status
+    result_dict['storadapter_storunit1_Outstanding_IRP_Status'] = storadapter_storunit1_Outstanding_IRP_Status
+    logger.info(f'storadapter_storunit1_Outstanding_IRP_Status: {storadapter_storunit1_Outstanding_IRP_Status}')
 
     storadapter_storunit2_address = result_dict.get('storadapter_storunit2_address', None)
     logger.info(f'storadapter_storunit2_address: {storadapter_storunit2_address}')
@@ -206,31 +195,38 @@ def storage_run(result_dict, current_step):
         result = fileOP.get_text_with_start_and_end(cmd_output_list, start_text, end_text)
 
         first_index = get_list_text_line_first_index(cmd_output_list, 'ffff')
-        storadapter_storunit2_Outstanding_IRP_Status = 0
+
         # logger.info(f'first_index: {first_index}')
         if first_index:
             result_dict['storadapter_storunit2_Outstanding_IRP_Context'] = cmd_output_list[first_index: first_index + 6]
             storadapter_storunit2_Outstanding_IRP_Status = 1
-        result_dict['storadapter_storunit2_Outstanding_IRP_Status'] = storadapter_storunit2_Outstanding_IRP_Status
+    result_dict['storadapter_storunit2_Outstanding_IRP_Status'] = storadapter_storunit2_Outstanding_IRP_Status
 
-    DISK_HARDWARE_ERROR_Status = result_dict.get('DISK_HARDWARE_ERROR_Status', None)
-    storadapter_adapter1_SurpriseRemoval_Status = result_dict.get('storadapter_adapter1_SurpriseRemoval_Status', None)
-    Storclass_FDO1_Failed_Requests_Status = result_dict.get('Storclass_FDO1_Failed_Requests_Status', None)
+    storadapter_adapter1_SurpriseRemoval_Status = result_dict.get('storadapter_adapter1_SurpriseRemoval_Status', 0)
+    Storclass_FDO1_Failed_Requests_Status = result_dict.get('Storclass_FDO1_Failed_Requests_Status', 0)
 
-    check_point = False
-    if DISK_HARDWARE_ERROR_Status and DISK_HARDWARE_ERROR_Status == 1:
-        check_point = True
-    if storadapter_adapter1_SurpriseRemoval_Status and storadapter_adapter1_SurpriseRemoval_Status == 1:
-        check_point = True
-    if Storclass_FDO1_Failed_Requests_Status and Storclass_FDO1_Failed_Requests_Status == 1:
-        check_point = True
-    if storadapter_storunit1_Outstanding_IRP_Status and storadapter_storunit1_Outstanding_IRP_Status == 1:
-        check_point = True
+    storadapter_adapter2_SurpriseRemoval_Status = result_dict.get('storadapter_adapter2_SurpriseRemoval_Status', 0)
+    Storclass_FDO2_Failed_Requests_Status = result_dict.get('Storclass_FDO2_Failed_Requests_Status', 0)
 
-    Disk_Status_Abnormal = 0
-    if check_point:
-        Disk_Status_Abnormal = 1
-    result_dict['Disk_Status_Abnormal'] = Disk_Status_Abnormal
+    Disk1_Status_Abnormal = 0
+    if storadapter_adapter1_SurpriseRemoval_Status == 1 or Storclass_FDO1_Failed_Requests_Status == 1 or storadapter_storunit1_Outstanding_IRP_Status == 1:
+        Disk1_Status_Abnormal = 1
+    result_dict['Disk1_Status_Abnormal'] = Disk1_Status_Abnormal
+
+    Disk2_Status_Abnormal = 0
+    if storadapter_adapter2_SurpriseRemoval_Status == 1 or Storclass_FDO2_Failed_Requests_Status == 1 or storadapter_storunit2_Outstanding_IRP_Status == 1:
+        Disk2_Status_Abnormal = 1
+    result_dict['Disk2_Status_Abnormal'] = Disk2_Status_Abnormal
+
+    BSOD_Supcious_Device = ''
+    if BUGCHECK_CODE == '7A' or BUGCHECK_CODE == 'EF' or BUGCHECK_CODE == '154' or BUGCHECK_CODE == '24' or BUGCHECK_CODE == 'E2':
+        if Disk1_Status_Abnormal == 1:
+            Storclass_FDO1_DeviceID = result_dict.get('Storclass_FDO1_DeviceID', None)
+            BSOD_Supcious_Device = Storclass_FDO1_DeviceID
+        if Disk2_Status_Abnormal == 1:
+            Storclass_FDO2_DeviceID = result_dict.get('Storclass_FDO2_DeviceID', None)
+            BSOD_Supcious_Device = Storclass_FDO2_DeviceID
+    result_dict['BSOD_Supcious_Device'] = BSOD_Supcious_Device
     return
 
 def usb_run(result_dict, current_step):
@@ -308,21 +304,19 @@ def locks_run(result_dict, current_step):
     logger.info(f'blocked_IRP_Address: {blocked_IRP_Address}')
 
     blocked_device_Address = None
-    blocked_IRP_Address_status = 0
+    blocked_IRP_address_status = 0
     if blocked_IRP_Address:
-        blocked_IRP_Address_status = 1
+        blocked_IRP_address_status = 1
         # !irp blocked_IRP_Address
         blocked_device_Address = irp_blocked_IRP_Address(result_dict, blocked_IRP_Address, current_step)
 
         logger.info(f'blocked_device_Address: {blocked_device_Address}')
 
-    result_dict['blocked_IRP_Address_status'] = blocked_IRP_Address_status
+    result_dict['blocked_IRP_address_status'] = blocked_IRP_address_status
 
     # !devstack blocked_device_Address
     if blocked_device_Address:
         devstack_blocked_device_Address(result_dict, blocked_device_Address, current_step)
-
-        blocked_IRP_driver = result_dict['blocked_IRP_driver']
 
     # !powertriage
     powertriage(result_dict, current_step)
@@ -330,7 +324,7 @@ def locks_run(result_dict, current_step):
     locks_thread_Status_Abnormal = 0
 
     PopFxActivateDevice_Status = result_dict.get('nt!PopFxActivateDevice_Status', None)
-    if blocked_IRP_Address_status or PopFxActivateDevice_Status:
+    if blocked_IRP_address_status or PopFxActivateDevice_Status:
         locks_thread_Status_Abnormal = 1
     result_dict['locks_thread_Status_Abnormal'] = locks_thread_Status_Abnormal
     return
@@ -357,11 +351,10 @@ def thread_run(result_dict, current_step):
     # # time.sleep(15)
 
     result_dict['running_Context'] = cmd_output
-
     return
 
 # Wait test case
-def Current_Thread_run(result_dict, current_step):
+def current_thread_run(result_dict, current_step):
     cmd = "!thread"
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
@@ -398,8 +391,11 @@ def system_info_run(result_dict, current_step):
 
     return
 
-def WHEA_0x124_run(result_dict, current_step):
-    WHEA_ERROR_RECORD_Address = result_dict['BUGCHECK_P2']
+def WHEA_0x124_run(result_dict, BUGCHECK_P2, current_step):
+    WHEA_Status_Abnormal = 1
+    result_dict['WHEA_Status_Abnormal'] = WHEA_Status_Abnormal
+
+    WHEA_ERROR_RECORD_Address = BUGCHECK_P2
 
     # errrec WHEA_ERROR_RECORD_Address
     cmd = f"!errrec {WHEA_ERROR_RECORD_Address}"
@@ -424,8 +420,9 @@ def WHEA_0x124_run(result_dict, current_step):
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
     # logger.info(f'WHEA cmd_output: {cmd_output}')
-
     result_dict['WHEA_Context'] = cmd_output
+
+
     return
 
 def Power_0x9f_3_run(result_dict, Automatic_dict, current_step):
@@ -445,6 +442,7 @@ def Power_0x9f_3_run(result_dict, Automatic_dict, current_step):
 
 def Power_0x9f_4_run(result_dict, Automatic_dict, current_step):
     result_dict['The_Power_Management_Status_Abnormal'] = 1
+    # result_dict['blocked_IRP_address_status'] = 0
 
     Bugcheck_P3 = Automatic_dict['BUGCHECK_P3']
     blocked_thread_Address = Bugcheck_P3

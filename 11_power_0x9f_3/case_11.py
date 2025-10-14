@@ -8,10 +8,9 @@ path_dir = os.path.dirname(__file__)
 
 
 if __name__ == '__main__':
-    src_dir = r'G:\BSOD_Debug_SOP_0911\5. Storage\5.3 SW Hung 0xEF Locks NTFS Disk Retried Failed Request'
+    src_dir = r'G:\BSOD_Debug_SOP_0911\11. Power_0x9f_3\11.1 0x9f_3_igfx'
 
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
-    # tool_log_file = os.path.join(src_dir, 'hello.log')
 
     # start
     if not windbg.start(target=dump_file):
@@ -20,7 +19,6 @@ if __name__ == '__main__':
         step_dict = {}
         Automatic_dict = {}
         total_dict = {}
-        debug_data_dict = {}
         debug_data_dict_str = ''
 
         # 1. Automatic
@@ -31,16 +29,21 @@ if __name__ == '__main__':
         step_dict_str = update_Automatic_dict_str(Automatic_dict)
         debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
 
-        # 5. Storage
-        step_dict = {}
-        logger.info(f'5.Storage')
-        storage_run(step_dict, Automatic_dict, current_step=5)
-        total_dict['Storage'] = step_dict
+        BUGCHECK_CODE = Automatic_dict.get('BUGCHECK_CODE', None)
+        BUGCHECK_P1 = Automatic_dict.get('BUGCHECK_P1', None)
+        BUGCHECK_P2 = Automatic_dict.get('BUGCHECK_P2', None)
+        MODULE_NAME = Automatic_dict.get('MODULE_NAME', None)
 
-        step_dict_str = update_Storage_dict_str(step_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        # 11. Power_0x9f_3
+        if BUGCHECK_CODE == '9f' and BUGCHECK_P1 == '3':
+            step_dict = {}
+            logger.info(f'11.Power_0x9f_3')
+            Power_0x9f_3_run(step_dict, Automatic_dict, current_step=11)
+            total_dict['Power_0x9f_3'] = step_dict
+
+            step_dict_str = update_Power_0x9f_3_dict(step_dict)
+            debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
     finally:
         windbg.stop(path_dir)
-    
+
     dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
-    pass

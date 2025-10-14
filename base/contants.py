@@ -36,4 +36,5 @@ command_sleep_map = {
     '!WHEA': 10,
     'errrec': 10,
     'irp': 10,
+    'usb_tree': 25,
 }

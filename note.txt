@@ -10,7 +10,7 @@ else:
 
 get_list_text_count
 cmd_output_list = cmd_output.splitlines()
-PnP_6_run(result_dict, current_step)
+
 
 analyze_v_run(result_dict, current_step)
 

@@ -13,185 +13,154 @@ from base.helper import *
 from base import fileOP
 from base.contants import *
 
-def update_Automatic_dict(result_dict):
-    Automatic = {}
+def update_Automatic_dict_str(result_dict):
+    dict_str = 'Automatic Analysis: \n'
     content_list = ['BUGCHECK_CODE',
                     'BUGCHECK_P1',
                     'BUGCHECK_P2',
                     'BUGCHECK_P3',
                     'BUGCHECK_P4',
                     'FAILURE_BUCKET_ID',
-                    'DISK_HARDWARE_ERROR_Status',
                     'MODULE_NAME',
-                    'Context_Memory_Corruption_Status',
-                    'Stack_Memory_Operation_Status',
                     'Disk_Status_Abnormal',
                     'Memory_Status_Abnormal',
+                    'DISK_HARDWARE_ERROR_Status',
+                    'Context_Memory_Corruption_Status',
+                    'Stack_Memory_Operation_Status',
                     ]
     for content in content_list:
-        Automatic[content] = result_dict.get(content, '')
-    return Automatic
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
-def update_Sysinfo_dict(result_dict):
-    Sysinfo_dict = {}
-    Sysinfo_dict['OS_Version_ID'] = result_dict.get('OS_Version_ID')
-    Sysinfo_dict['CPUID'] = result_dict.get('CPUID')
-    return Sysinfo_dict
+def update_Sysinfo_dict_str(result_dict):
+    dict_str = 'Sysinfo: \n'
+    content_list = ['OS_Version_ID',
+                    'CPUID']
+    for content in content_list:
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
-def update_current_thread_dict(result_dict):
-    current_dict = {}
-    # current_dict['OS_Version_ID'] = result_dict.get('OS_Version_ID')
-    return current_dict
-
-def update_Storage_dict(result_dict):
-    Storage_dict = {}
-    content_list = ['Storclass_FDO1_DeviceID',
-                    'Storclass_FDO2_DeviceID',
+def update_Storage_dict_str(result_dict):
+    dict_str = 'Storage: \n'
+    content_list = ['Disk1_Status_Abnormal',
+                    'Disk2_Status_Abnormal',
+                    'BSOD_Supcious_Device',
+                    'Storclass_FDO1_DeviceID',
                     'Storclass_FDO1_Failed_Requests_Status',
-                    'Storclass_FDO2_Failed_Requests_Status',
                     'storadapter_adapter1_SurpriseRemoval_Status',
-                    'storadapter_adapter2_SurpriseRemoval_Status',
                     'storadapter_storunit1_Outstanding_IRP_Status',
+                    'Storclass_FDO2_DeviceID',
+                    'Storclass_FDO2_Failed_Requests_Status',
+                    'storadapter_adapter2_SurpriseRemoval_Status',
                     'storadapter_storunit2_Outstanding_IRP_Status',
-                    'Disk_Status_Abnormal',
                     ]
     for content in content_list:
-        Storage_dict[content] = result_dict.get(content, '')
-    return Storage_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
-def update_PnP_dict(result_dict):
-    PnP_dict = {}
-    content_list = ['blocked_IRP_Address_status',
+def update_PnP_dict_str(result_dict):
+    dict_str = 'PnP: \n'
+    content_list = ['PnP_Status_Abnormal',
+                    'PnP_blocked_IRP_address_status',
                     'pending_Removal_status',
-                    'PnP_Status_Abnormal']
+                    ]
     for content in content_list:
-        PnP_dict[content] = result_dict.get(content, '')
-    return PnP_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
 def update_ACPI_dict(result_dict):
-    ACPI_dict = {}
+    dict_str = 'ACPI: \n'
     content_list = ['ACPI_Method_Object',
                     'ACPI_Method_Status',
                     'ACPI_Method_AMLPointer']
     for content in content_list:
-        ACPI_dict[content] = result_dict.get(content, '')
-    return ACPI_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
 def update_NDIS_dict(result_dict):
-    NDIS_dict = {}
-    content_list = ['NDIS_OID_Pending_Status',
+    dict_str = 'NDIS: \n'
+    content_list = ['NDIS_Status_Abnormal',
+                    'NDIS_OID_Pending_Status',
                     'Ndis_netadapter1_name',
-                    'Ndis_netadapter2_name',
-                    'NDIS_Status_Abnormal',]
+                    'Ndis_netadapter2_name',]
     for content in content_list:
-        NDIS_dict[content] = result_dict.get(content, '')
-    return NDIS_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
 def update_WHEA_0x124_dict(result_dict):
-    WHEA_dict = {}
-    content_list = ['WHEA_ERROR_RECORD_Type',
+    dict_str = 'WHEA_0x124: \n'
+    content_list = ['WHEA_Status_Abnormal',
                     'BSOD_Supcious_Device',
-                    'WHEA_Status_Abnormal',
+                    'WHEA_ERROR_RECORD_Type',
                     ]
     for content in content_list:
-        WHEA_dict[content] = result_dict.get(content, '')
-    return WHEA_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
 def update_Power_0x9f_3_dict(result_dict):
-    tmp_dict = {}
-    content_list = ['blocked_device_ServiceName',
-                    'blocked_device_DeviceInst',
-                    'blocked_irp_Driver',
-                    'System_State_Context',
-                    'Device_State_Context'
-                    'BSOD_Supcious_Driver',
+    dict_str = 'Power_0x9f_3: \n'
+    content_list = ['The_Power_Management_Status_Abnormal',
                     'BSOD_Supcious_Device',
-                    'The_Power_Management_Status_Abnormal'
+                    'BSOD_Supcious_Driver',
+                    'blocked_device_ServiceName',
+                    'blocked_device_DeviceInst',
+                    'blocked_IRP_Driver',
                     ]
     for content in content_list:
-        tmp_dict[content] = result_dict.get(content, '')
-    return tmp_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
 def update_Power_0x9f_4_dict(result_dict):
-    tmp_dict = {}
-    content_list = ['blocked_IRP_Address_status',
+    dict_str = 'Power_0x9f_4: \n'
+    content_list = ['The_Power_Management_Status_Abnormal',
                     'nt!PopFxActivateDevice_Status',
-                    'blocked_irp_Driver',
-                    'blocked_device_ServiceName',
-                    'blocked_device_DeviceInst'
-                    'System_State_Context',
-                    'Device_State_Context',
-                    'BSOD_Supcious_Driver',
+                    'blocked_IRP_address_status',
                     'BSOD_Supcious_Device',
-                    'The_Power_Management_Status_Abnormal'
+                    'BSOD_Supcious_Driver',
+                    'blocked_device_ServiceName',
+                    'blocked_device_DeviceInst',
+                    'blocked_IRP_Driver',
                     ]
     for content in content_list:
-        tmp_dict[content] = result_dict.get(content, '')
-    return tmp_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
 def update_locks_0xE2_dict(result_dict):
-    tmp_dict = {}
-    content_list = ['blocked_IRP_Address_status',
-                    'locks_thread_Status_Abnormal',
+    dict_str = 'locks_0xE2: \n'
+    content_list = ['locks_thread_Status_Abnormal',
+                    'blocked_IRP_address_status',
                     'nt!PopFxActivateDevice_Status',
-                    'blocked_irp_Driver',
-                    'blocked_device_ServiceName'
-                    'blocked_device_DeviceInst',
-                    'System_State_Context',
-                    'Device_State_Context',
+                    'BSOD_Supcious_Device',
                     'BSOD_Supcious_Driver',
-                    'BSOD_Supcious_Device'
+                    'blocked_device_ServiceName',
+                    'blocked_device_DeviceInst',
+                    'blocked_IRP_Driver',
                     ]
     for content in content_list:
-        tmp_dict[content] = result_dict.get(content, '')
-    return tmp_dict
+        value = result_dict.get(content, '')
+        value = str(value)
+        dict_str = dict_str + f'  {content}: ' + value + '\n'
+    return dict_str
 
-def update_final_dict(result_dict):
-    debug_data_dict = {}
-    Automatic = update_Automatic_dict(result_dict, current_step)
-    debug_data_dict['Automatic Analysis'] = Automatic
-
-    Sysinfo_dict = update_Sysinfo_dict(result_dict, current_step)
-    debug_data_dict['Sysinfo'] = Sysinfo_dict
-
-    current_dict = update_current_thread_dict(result_dict, current_step)
-    debug_data_dict['Current Thread'] = current_dict
-
-    Storage_dict = update_Storage_dict(result_dict, current_step)
-    debug_data_dict['Storage'] = Storage_dict
-
-    PnP_dict = update_PnP_dict(result_dict, current_step)
-    debug_data_dict['PnP'] = PnP_dict
-
-    ACPI_dict = update_ACPI_dict(result_dict, current_step)
-    debug_data_dict['ACPI'] = ACPI_dict
-
-    NDIS_dict = update_NDIS_dict(result_dict, current_step)
-    debug_data_dict['NDIS'] = NDIS_dict
-
-    WHEA_0x124_run = step_dict.get('WHEA_0x124_run', None)
-    if WHEA_0x124_run:
-        WHEA_dict = update_WHEA_0x124_dict(result_dict, current_step)
-        debug_data_dict['WHEA_0x124'] = WHEA_dict
-
-    Power_0x9f_3_run = step_dict.get('Power_0x9f_3_run', None)
-    if Power_0x9f_3_run:
-        tmp_dict = update_Power_0x9f_3_dict(result_dict, current_step)
-        debug_data_dict['Power_0x9f_3'] = tmp_dict
-
-    Power_0x9f_4_run = step_dict.get('Power_0x9f_4_run', None)
-    if Power_0x9f_4_run:
-        tmp_dict = update_Power_0x9f_4_dict(result_dict, current_step)
-        debug_data_dict['Power_0x9f_4'] = tmp_dict
-
-    locks_run = step_dict.get('locks_run', None)
-    if locks_run:
-        tmp_dict = update_locks_0xE2_dict(result_dict, current_step)
-        debug_data_dict['locks_0xE2'] = tmp_dict
-
-    return debug_data_dict
-
-def dump_result_yaml(result_dict, BSOD_Debug_Data, dir_name):
+def dump_result_yaml(result_dict, BSOD_Debug_Data_str, dir_name):
     # last dump
     result_yaml_file = 'result.yaml'
     result_yaml_file = os.path.join(dir_name, result_yaml_file)
@@ -199,17 +168,9 @@ def dump_result_yaml(result_dict, BSOD_Debug_Data, dir_name):
 
     result_yaml_file = 'BSOD_Debug_Data.yaml'
     result_yaml_file = os.path.join(dir_name, result_yaml_file)
-    fileOP.dump_file(result_yaml_file, BSOD_Debug_Data)
+    fileOP.wrtie_file(result_yaml_file, BSOD_Debug_Data_str)
 
-    # # command list
-    # result_yaml_file = 'command_list.yaml'
-    # result_yaml_file = os.path.join(dir_name, result_yaml_file)
-    # fileOP.dump_file(result_yaml_file, command_his)
-    #
-    # # command
-    # result_yaml_file = 'command_dict.yaml'
-    # result_yaml_file = os.path.join(dir_name, result_yaml_file)
-    # fileOP.dump_file(result_yaml_file, command_dict)
+    # fileOP.dump_file(result_yaml_file, BSOD_Debug_Data)
     return
 
 def parse_blocked_IRP_Address(cmd_output_list, result_dict):
@@ -222,15 +183,15 @@ def parse_blocked_IRP_Address(cmd_output_list, result_dict):
         index = get_stack_begin_index(cmd_output_list)
         if index is not None:
             # 偏移3行
-            blocked_IRP_driver = cmd_output_list[index+2].strip()
-            # logger.info(f'blocked_IRP_driver: {blocked_IRP_driver}')
-            split_list = blocked_IRP_driver.split('\t')
-            blocked_IRP_driver = split_list[0]
-            # logger.info(f'blocked_IRP_driver: {blocked_IRP_driver}')
-            last_index = get_list_text_line_last_index(blocked_IRP_driver, '\\')
-            blocked_IRP_driver = blocked_IRP_driver[last_index+1:]
-            logger.info(f'blocked_IRP_driver: {blocked_IRP_driver}')
-            result_dict['blocked_IRP_driver'] = blocked_IRP_driver
+            blocked_IRP_Driver = cmd_output_list[index+2].strip()
+            # logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
+            split_list = blocked_IRP_Driver.split('\t')
+            blocked_IRP_Driver = split_list[0]
+            # logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
+            last_index = get_list_text_line_last_index(blocked_IRP_Driver, '\\')
+            blocked_IRP_Driver = blocked_IRP_Driver[last_index+1:]
+            logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
+            result_dict['blocked_IRP_Driver'] = blocked_IRP_Driver
 
             # 偏移2行
             blocked_device_Address = cmd_output_list[index+1].strip()
@@ -246,7 +207,7 @@ def parse_blocked_IRP_Address(cmd_output_list, result_dict):
 
 def get_blocked_IRP_Address_thread(cmd_output_list, result_dict):
     blocked_IRP_Address = None
-    blocked_IRP_Address_status = 0
+    blocked_IRP_address_status = 0
     if cmd_output_list:
         result_str = '\n' + '\n'.join(cmd_output_list)
         result_dict['Locks_thread_context'] = result_str
@@ -258,9 +219,10 @@ def get_blocked_IRP_Address_thread(cmd_output_list, result_dict):
                 blocked_IRP_Address = cmd_output_list[idx + 1].split(':')[0]
                 logger.info(f'blocked_IRP_Address: {blocked_IRP_Address}')
                 result_dict['blocked_IRP_Address'] = blocked_IRP_Address
-                blocked_IRP_Address_status = 1
+                blocked_IRP_address_status = 1
 
-    result_dict['blocked_IRP_Address_status'] = blocked_IRP_Address_status
+    result_dict['blocked_IRP_address_status'] = blocked_IRP_address_status
+    logger.info(f'blocked_IRP_address_status: {blocked_IRP_address_status}')
 
     return blocked_IRP_Address
 
@@ -270,7 +232,7 @@ def get_blocked_IRP_Address_pnp(cmd_output_list, result_dict):
         result_str = '\n' + '\n'.join(cmd_output_list)
         result_dict['Locks_thread_context'] = result_str
 
-        blocked_IRP_Address_status = 0
+        PnP_blocked_IRP_address_status = 0
         for idx, line in enumerate(cmd_output_list):
             line = line.strip()
             if 'IRP List' in line:
@@ -278,10 +240,10 @@ def get_blocked_IRP_Address_pnp(cmd_output_list, result_dict):
                 blocked_IRP_Address = cmd_output_list[idx + 1].split(':')[0]
                 logger.info(f'blocked_IRP_Address: {blocked_IRP_Address}')
                 result_dict['blocked_IRP_Address'] = blocked_IRP_Address
-                blocked_IRP_Address_status = 1
+                PnP_blocked_IRP_address_status = 1
 
-    result_dict['blocked_IRP_Address_status'] = blocked_IRP_Address_status
-
+    result_dict['PnP_blocked_IRP_address_status'] = PnP_blocked_IRP_address_status
+    logger.info(f'PnP_blocked_IRP_address_status: {PnP_blocked_IRP_address_status}')
     return blocked_IRP_Address
 
 def parse_locks_info(cmd_output_list, result_dict):
@@ -446,11 +408,17 @@ def parse_analyze_v(cmd_output, result_dict):
 
     update_dict_by_parse(cmd_output_list, item_list, result_dict)
 
+    DISK_HARDWARE_ERROR_Status = 0
+    Disk_Status_Abnormal = 0
     count = get_list_text_count(cmd_output_list, 'DISK_HARDWARE_ERROR')
+
     if count:
-        result_dict['DISK_HARDWARE_ERROR_Status'] = 1
-    else:
-        result_dict['DISK_HARDWARE_ERROR_Status'] = 0
+        DISK_HARDWARE_ERROR_Status = 1
+        Disk_Status_Abnormal = 1
+
+
+    result_dict['DISK_HARDWARE_ERROR_Status'] = DISK_HARDWARE_ERROR_Status
+    result_dict['Disk_Status_Abnormal'] = Disk_Status_Abnormal
 
     # Trap_Frame_Context
     update_Trap_Frame_Context(cmd_output_list, result_dict)

@@ -36,7 +36,7 @@ def create_folder(folder_path):
     return False
 
 
-def copy_single_file(src_path, dest_path, overwrite=False):
+def copy_single_file(src_path, dest_path, overwrite=True):
     try:
         # 检查源文件是否存在
         if not os.path.isfile(src_path):
@@ -48,10 +48,10 @@ def copy_single_file(src_path, dest_path, overwrite=False):
             file_name = os.path.basename(src_path)
             dest_path = os.path.join(dest_path, file_name)
 
-        # 检查目标文件是否存在
-        if os.path.exists(dest_path) and not overwrite:
-            logger.info(f"错误: 目标文件已存在，未进行覆盖 - {dest_path}")
-            return False
+        # # 检查目标文件是否存在
+        # if os.path.exists(dest_path) and not overwrite:
+        #     logger.info(f"错误: 目标文件已存在，未进行覆盖 - {dest_path}")
+        #     return False
 
         # 复制文件
         shutil.copy2(src_path, dest_path)  # copy2会保留文件元数据
@@ -110,6 +110,7 @@ def update_Trap_Frame_Context(cmd_output_list, result_dict):
     start_text = f'CONTEXT:'
     end_text = 'Resetting default scope'
     result = fileOP.get_text_with_start_and_end(cmd_output_list, start_text, end_text)
+    result_dict['Context_Memory_Corruption_Status'] = 0
     if result:
         update_context_with_list(result, result_dict, 'Trap_Frame_Context')
         update_Context_Memory_Corruption_Status(result, result_dict)

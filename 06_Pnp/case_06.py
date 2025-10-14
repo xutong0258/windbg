@@ -6,35 +6,42 @@ from base.one_step_sop import *
 
 path_dir = os.path.dirname(__file__)
 
-# OK
-src_dir = r'D:\0_LOG_VIP\1_Automatic\1.1_0x3b_Context_Memory_Corruption'
-src_dir = r'D:\0_LOG_VIP\2_Sysinfo\2.1_0x124_0_Machine_Check_Error'
-src_dir = r'D:\0_LOG_VIP\4_Process\4.1_SW Hung_0xEF_Locks_rtux64w10'
-src_dir = r'D:\0_LOG_VIP\5_Storage\5.1_Disk_0x7A_SurpriseRemoval'
-
 if __name__ == '__main__':
-    # src_dir = r'D:\0_LOG_VIP\6_PnP\6.1_SW_Hung_0xEF_Locks_NTFS_Disk_Retried_Failed_Request'
-
-    src_dir = r'E:\BSOD_Debug_SOP_0911\6. PnP\6.1 SW Hung 0xEF Locks NTFS Disk Retried Failed Request'
-    src_dir = r'E:\BSOD_Debug_SOP_0911\6. PnP\6.2 开发样本_0x9f_4_IRP_Intel WLAN'
+    src_dir = r'G:\BSOD_Debug_SOP_0911\6. PnP\6.2 开发样本_0x9f_4_IRP_Intel WLAN'
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
-    log_file = os.path.join(path_dir, 'tmp.log')
-    result_dict = {}
 
     # start
     if not windbg.start(target=dump_file):
         assert ('FAIL')
 
     try:
-        analyze_v_run(result_dict, current_step)
+        step_dict = {}
+        Automatic_dict = {}
+        total_dict = {}
+        debug_data_dict = {}
+        debug_data_dict_str = ''
 
-        PnP_run(result_dict, current_step)
+        # 1. Automatic
+        logger.info(f'1.Automatic')
+        analyze_v_run(Automatic_dict, current_step=1)
+        total_dict['Automatic Analysis'] = Automatic_dict
 
+        step_dict_str = update_Automatic_dict_str(Automatic_dict)
+        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+
+        # 6. PnP
+        step_dict = {}
+        logger.info(f'6.PnP')
+        PnP_run(step_dict, current_step=6)
+        total_dict['PnP'] = step_dict
+        
+        step_dict_str = update_PnP_dict_str(step_dict)
+        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
         
     finally:
         windbg.stop(path_dir)
 
     step_dict = {}
     
-    dump_result_yaml(total_dict, debug_data_dict, path_dir)
+    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
     pass

@@ -19,16 +19,29 @@ if __name__ == '__main__':
         assert ('FAIL')
 
     try:
-        analyze_v_run(result_dict, current_step)
+        step_dict = {}
+        Automatic_dict = {}
+        total_dict = {}
+        debug_data_dict = {}
+        debug_data_dict_str = ''
 
-        process_vm_run(result_dict, current_step)
+        # 1. Automatic
+        logger.info(f'1.Automatic')
+        analyze_v_run(Automatic_dict, current_step=1)
+        total_dict['Automatic Analysis'] = Automatic_dict
 
-        
+        step_dict_str = update_Automatic_dict_str(Automatic_dict)
+        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+
+        step_dict = {}
+        logger.info(f'4.Process')
+        process_vm_run(step_dict, current_step=4)
+        total_dict['Process'] = step_dict
 
     finally:
         windbg.stop(path_dir)
 
     step_dict = {}
     
-    dump_result_yaml(total_dict, debug_data_dict, path_dir)
+    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
     pass

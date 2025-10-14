@@ -17,7 +17,7 @@ src_dir = r'D:\0_LOG_VIP\7_ACPI\7.1_0x9f_3_ACPI\1_0x9f_3_ACPI_cdrom'
 src_dir = r'D:\0_LOG_VIP\8_NDIS\8.1_0x133_Realtek_WLAN_NDIS_OID'
 
 if __name__ == '__main__':
-    src_dir = r'D:\0_LOG_VIP\9_USB\9.1_0x9f_3_USB\0x9f_3_USB_usbccgp_Disk_IO_Exception'
+    src_dir = r'G:\BSOD_Debug_SOP_0911\1. Automatic\1.2 0x1A_Call Stack MI'
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
     log_file = os.path.join(path_dir, 'tmp.log')
     result_dict = {}
@@ -26,28 +26,28 @@ if __name__ == '__main__':
     if not windbg.start(target=dump_file):
         assert ('FAIL')
 
-    analyze_v_run(result_dict, current_step)
+    step_dict = {}
+    Automatic_dict = {}
+    total_dict = {}
+    debug_data_dict = {}
 
-    BUGCHECK_CODE = result_dict['BUGCHECK_CODE']
-    BUGCHECK_P1 = result_dict['BUGCHECK_P1']
+    # 1. Automatic
+    logger.info(f'1.Automatic')
+    analyze_v_run(Automatic_dict, current_step=1)
+    total_dict['Automatic Analysis'] = Automatic_dict
 
-    logger.info(f'BUGCHECK_CODE: {BUGCHECK_CODE}')
-    logger.info(f'BUGCHECK_P1: {BUGCHECK_P1}')
+    debug_dict = update_Automatic_dict(Automatic_dict)
+    debug_data_dict['Automatic Analysis'] = debug_dict
 
-    if BUGCHECK_CODE == '9f' and BUGCHECK_P1 == '3':
-        Power_0x9f_3_run(result_dict, current_step)
-        pass
-
-    BSOD_Supcious_Device = result_dict.get('BSOD_Supcious_Device', None)
-
-    # if 'USB' in BSOD_Supcious_Device:
-    usb_run(result_dict, current_step)
-
-    
+    # 9. USB
+    step_dict = {}
+    # BSOD_Supcious_Device = result_dict.get('BSOD_Supcious_Device', None)
+    # if BSOD_Supcious_Device == 'USB':
+    logger.info(f'9.USB')
+    usb_run(step_dict, current_step=9)
+    total_dict['USB'] = step_dict
 
     windbg.stop(path_dir)
-
-    step_dict = {}
     
-    dump_result_yaml(total_dict, debug_data_dict, path_dir)
+    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
     pass

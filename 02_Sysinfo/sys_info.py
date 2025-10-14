@@ -7,7 +7,7 @@ from base.one_step_sop import *
 path_dir = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    src_dir = r'D:\0_LOG_VIP\6_PnP\6.1 SW Hung 0xEF Locks NTFS Disk Retried Failed Request'
+    src_dir = r'G:\BSOD_Debug_SOP_0911\2. Sysinfo\2.1 0x124_0_Machine Check Error'
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
     # tool_log_file = os.path.join(src_dir, 'hello.log')
 
@@ -19,20 +19,30 @@ if __name__ == '__main__':
         assert ('FAIL')
 
     try:
-        analyze_v_run(result_dict, current_step)
+        step_dict = {}
+        Automatic_dict = {}
+        total_dict = {}
+        debug_data_dict = {}
+        debug_data_dict_str = ''
 
-        BUGCHECK_CODE = result_dict.get('BUGCHECK_CODE')
+        # 1. Automatic
+        logger.info(f'1.Automatic')
+        analyze_v_run(Automatic_dict, current_step=1)
+        total_dict['Automatic Analysis'] = Automatic_dict
 
-        # if BUGCHECK_CODE and BUGCHECK_CODE == '124':
-        #     WHEA_0x124_run(result_dict, current_step)
+        step_dict_str = update_Automatic_dict_str(Automatic_dict)
+        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
 
-        system_info_run(result_dict, current_step)
 
+        logger.info(f'2.Sysinfo')
+        system_info_run(step_dict, current_step=2)
+        total_dict['Sysinfo'] = step_dict
+
+        step_dict_str = update_Sysinfo_dict_str(step_dict)
+        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
         
     finally:
         windbg.stop(path_dir)
 
-    step_dict = {}
-    
-    dump_result_yaml(result_dict,debug_data_dict, command_his, command_dict , path_dir)
+    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
     pass
