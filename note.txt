@@ -1,4 +1,3 @@
-update_context(cmd_output, result_dict, 'swd_DPCTimeout_Context')
 
 match = re.search(r'\d+\.\d+', OS_Version_ID)
 
@@ -10,22 +9,3 @@ else:
 
 get_list_text_count
 cmd_output_list = cmd_output.splitlines()
-
-
-analyze_v_run(result_dict, current_step)
-
-result_dict = thread_run(result_dict, current_step)
-
-result_dict = process_vm_run(result_dict, current_step)
-
-result_dict = locks_run(result_dict, current_step)
-
-BSOD_Supcious_Driver = result_dict.get('BSOD_Supcious_Driver', None)
-if BSOD_Supcious_Driver == 'NDIS Driver':
-    result_dict = ndis_run(result_dict, current_step)
-
-BSOD_Supcious_Device = result_dict.get('BSOD_Supcious_Device', None)
-if BSOD_Supcious_Device == 'USB':
-    result_dict = usb_run(result_dict, current_step)
-
- result_dict = storage_run(result_dict, current_step)
