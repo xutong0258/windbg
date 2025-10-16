@@ -33,6 +33,7 @@ if __name__ == '__main__':
     BUGCHECK_P2 = Automatic_dict.get('BUGCHECK_P2', None)
     MODULE_NAME = Automatic_dict.get('MODULE_NAME', None)
 
+    logger.info(f'BUGCHECK_CODE:{BUGCHECK_CODE}')
 
     # 10. WHEA_0x124
     if BUGCHECK_CODE == '124':

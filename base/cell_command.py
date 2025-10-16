@@ -82,17 +82,17 @@ def powertriage(result_dict, current_step):
     cmd_output_list = cmd_output.splitlines()
     parse_powertriage(cmd_output_list, result_dict)
 
-    blocked_IRP_driver = result_dict.get('blocked_IRP_driver', None)
-    if blocked_IRP_driver:
-        result_dict['BSOD_Supcious_Driver'] = blocked_IRP_driver
-    logger.info(f'BSOD_Supcious_Driver: {blocked_IRP_driver}')
+    blocked_IRP_Driver = result_dict.get('blocked_IRP_Driver', None)
+    if blocked_IRP_Driver:
+        result_dict['BSOD_Suspicious_Driver'] = blocked_IRP_Driver
+    logger.info(f'BSOD_Suspicious_Driver: {blocked_IRP_Driver}')
 
     blocked_device_ServiceName = result_dict.get('blocked_device_ServiceName', None)
     blocked_device_DeviceInst = result_dict.get('blocked_device_DeviceInst', None)
     if blocked_device_ServiceName and blocked_device_DeviceInst:
-        BSOD_Supcious_Device =  f'{blocked_device_ServiceName} {blocked_device_DeviceInst}'
-        result_dict['BSOD_Supcious_Device'] = BSOD_Supcious_Device
-        logger.info(f'BSOD_Supcious_Device: {BSOD_Supcious_Device}')
+        BSOD_Suspicious_Device =  f'{blocked_device_ServiceName} {blocked_device_DeviceInst}'
+        result_dict['BSOD_Suspicious_Device'] = BSOD_Suspicious_Device
+        logger.info(f'BSOD_Suspicious_Device: {BSOD_Suspicious_Device}')
     return
 
 def amli_r_ACPI_Method_Address(result_dict, current_step):

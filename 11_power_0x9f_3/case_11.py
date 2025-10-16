@@ -8,7 +8,7 @@ path_dir = os.path.dirname(__file__)
 
 
 if __name__ == '__main__':
-    src_dir = r'G:\BSOD_Debug_SOP_0911\11. Power_0x9f_3\11.1 0x9f_3_igfx'
+    src_dir = r'G:\BSOD_Debug_SOP_0911\11. Power_0x9f_3\11.3 0x9f_3_Disk_FastBoot'
 
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
 

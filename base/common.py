@@ -48,7 +48,7 @@ def update_Storage_dict_str(result_dict):
     dict_str = 'Storage: \n'
     content_list = ['Disk1_Status_Abnormal',
                     'Disk2_Status_Abnormal',
-                    'BSOD_Supcious_Device',
+                    'BSOD_Suspicious_Device',
                     'Storclass_FDO1_DeviceID',
                     'Storclass_FDO1_Failed_Requests_Status',
                     'storadapter_adapter1_SurpriseRemoval_Status',
@@ -78,7 +78,8 @@ def update_PnP_dict_str(result_dict):
 
 def update_ACPI_dict(result_dict):
     dict_str = 'ACPI: \n'
-    content_list = ['ACPI_Method_Object',
+    content_list = ['ACPI_Status_Abnormal',
+                    'ACPI_Method_Object',
                     'ACPI_Method_Status',
                     'ACPI_Method_AMLPointer']
     for content in content_list:
@@ -102,7 +103,7 @@ def update_NDIS_dict(result_dict):
 def update_WHEA_0x124_dict(result_dict):
     dict_str = 'WHEA_0x124: \n'
     content_list = ['WHEA_Status_Abnormal',
-                    'BSOD_Supcious_Device',
+                    'BSOD_Suspicious_Device',
                     'WHEA_ERROR_RECORD_Type',
                     ]
     for content in content_list:
@@ -114,8 +115,7 @@ def update_WHEA_0x124_dict(result_dict):
 def update_Power_0x9f_3_dict(result_dict):
     dict_str = 'Power_0x9f_3: \n'
     content_list = ['The_Power_Management_Status_Abnormal',
-                    'BSOD_Supcious_Device',
-                    'BSOD_Supcious_Driver',
+                    'BSOD_Suspicious_Device',
                     'blocked_device_ServiceName',
                     'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
@@ -131,8 +131,7 @@ def update_Power_0x9f_4_dict(result_dict):
     content_list = ['The_Power_Management_Status_Abnormal',
                     'nt!PopFxActivateDevice_Status',
                     'blocked_IRP_address_status',
-                    'BSOD_Supcious_Device',
-                    'BSOD_Supcious_Driver',
+                    'BSOD_Suspicious_Device',
                     'blocked_device_ServiceName',
                     'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
@@ -148,8 +147,8 @@ def update_locks_0xE2_dict(result_dict):
     content_list = ['locks_thread_Status_Abnormal',
                     'blocked_IRP_address_status',
                     'nt!PopFxActivateDevice_Status',
-                    'BSOD_Supcious_Device',
-                    'BSOD_Supcious_Driver',
+                    'BSOD_Suspicious_Device',
+                    'BSOD_Suspicious_Driver',
                     'blocked_device_ServiceName',
                     'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
@@ -627,14 +626,23 @@ def parse_powertriage(cmd_output_list, result_dict):
     result_dict['System_State_Context'] = System_State_Context
     logger.info(f'System_State_Context: {System_State_Context}')
 
-    # logger.info(f'cmd_output_list: {cmd_output_list}')
+
     index = get_list_text_line_first_index(cmd_output_list, '+')
+    logger.info(f'index: {index}')
     start_idx = index + 1
-    end_idx = start_idx + 3
+
+    # logger.info(f'cmd_output_list: {cmd_output_list}')
+    offset_index = get_Device_State_Context_last_index(cmd_output_list[start_idx:])
+    if offset_index is None:
+        offset_index = 3
+        logger.info(f'offset_index: {offset_index}')
+
+    end_idx = start_idx + offset_index
+
     Device_State_Context = cmd_output_list[start_idx: end_idx]
     Device_State_Context = '\n'.join(Device_State_Context).strip()
     result_dict['Device_State_Context'] = Device_State_Context
-    # logger.info(f'Device_State_Context: {Device_State_Context}')
+    logger.info(f'Device_State_Context: {Device_State_Context}')
     return
 
 def parse_devstack(cmd_output_list, result_dict):

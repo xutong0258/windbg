@@ -90,6 +90,7 @@ def PnP_run(result_dict, current_step):
 
 def storage_run(result_dict, Automatic_dict,current_step):
     BUGCHECK_CODE = Automatic_dict.get('BUGCHECK_CODE', None)
+    BUGCHECK_CODE = BUGCHECK_CODE.upper()
 
     cmd = ".load storagekd "
     logger.info(f'cmd: {cmd}')
@@ -212,21 +213,25 @@ def storage_run(result_dict, Automatic_dict,current_step):
     if storadapter_adapter1_SurpriseRemoval_Status == 1 or Storclass_FDO1_Failed_Requests_Status == 1 or storadapter_storunit1_Outstanding_IRP_Status == 1:
         Disk1_Status_Abnormal = 1
     result_dict['Disk1_Status_Abnormal'] = Disk1_Status_Abnormal
+    logger.info(f'Disk1_Status_Abnormal:{Disk1_Status_Abnormal}')
 
     Disk2_Status_Abnormal = 0
     if storadapter_adapter2_SurpriseRemoval_Status == 1 or Storclass_FDO2_Failed_Requests_Status == 1 or storadapter_storunit2_Outstanding_IRP_Status == 1:
         Disk2_Status_Abnormal = 1
     result_dict['Disk2_Status_Abnormal'] = Disk2_Status_Abnormal
+    logger.info(f'Disk2_Status_Abnormal:{Disk2_Status_Abnormal}')
 
-    BSOD_Supcious_Device = ''
+    BSOD_Suspicious_Device = ''
+    logger.info(f'BUGCHECK_CODE:{BUGCHECK_CODE}')
     if BUGCHECK_CODE == '7A' or BUGCHECK_CODE == 'EF' or BUGCHECK_CODE == '154' or BUGCHECK_CODE == '24' or BUGCHECK_CODE == 'E2':
         if Disk1_Status_Abnormal == 1:
             Storclass_FDO1_DeviceID = result_dict.get('Storclass_FDO1_DeviceID', None)
-            BSOD_Supcious_Device = Storclass_FDO1_DeviceID
+            BSOD_Suspicious_Device = Storclass_FDO1_DeviceID
         if Disk2_Status_Abnormal == 1:
             Storclass_FDO2_DeviceID = result_dict.get('Storclass_FDO2_DeviceID', None)
-            BSOD_Supcious_Device = Storclass_FDO2_DeviceID
-    result_dict['BSOD_Supcious_Device'] = BSOD_Supcious_Device
+            BSOD_Suspicious_Device = Storclass_FDO2_DeviceID
+    result_dict['BSOD_Suspicious_Device'] = BSOD_Suspicious_Device
+    logger.info(f'BSOD_Suspicious_Device:{BSOD_Suspicious_Device}')
     return
 
 def usb_run(result_dict, current_step):
@@ -413,7 +418,7 @@ def WHEA_0x124_run(result_dict, BUGCHECK_P2, current_step):
         WHEA_ERROR_RECORD_Type = WHEA_ERROR_RECORD_Type.replace(':', '').strip()
         logger.info(f'WHEA_ERROR_RECORD_Type: {WHEA_ERROR_RECORD_Type}')
         result_dict['WHEA_ERROR_RECORD_Type'] = WHEA_ERROR_RECORD_Type
-        result_dict['BSOD_Supcious_Device'] = WHEA_ERROR_RECORD_Type
+        result_dict['BSOD_Suspicious_Device'] = WHEA_ERROR_RECORD_Type
 
     # !WHEA
     cmd = f"!WHEA"

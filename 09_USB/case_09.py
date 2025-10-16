@@ -41,8 +41,8 @@ if __name__ == '__main__':
 
     # 9. USB
     step_dict = {}
-    # BSOD_Supcious_Device = result_dict.get('BSOD_Supcious_Device', None)
-    # if BSOD_Supcious_Device == 'USB':
+    # BSOD_Suspicious_Device = result_dict.get('BSOD_Suspicious_Device', None)
+    # if BSOD_Suspicious_Device == 'USB':
     logger.info(f'9.USB')
     usb_run(step_dict, current_step=9)
     total_dict['USB'] = step_dict

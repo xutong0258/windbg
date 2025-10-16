@@ -39,7 +39,7 @@ if __name__ == '__main__':
         # 13. DPC_0x133
         if BUGCHECK_CODE == '133':
             step_dict = {}
-            step_dict['BSOD_Supcious_Driver'] = MODULE_NAME
+            step_dict['BSOD_Suspicious_Driver'] = MODULE_NAME
             logger.info(f'13.dpc')
             dpc_run(step_dict, Automatic_dict, current_step=13)
 

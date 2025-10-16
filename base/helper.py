@@ -180,6 +180,7 @@ def update_dict_by_parse(cmd_output_list, item_list, result_dict):
         value = get_list_text_line(cmd_output_list, f'{item}')
         value = value.replace(f'{item}:', '').strip()
         result_dict[f'{item}'] = value
+    # logger.info(f'result_dict:{result_dict}')
     return
 
 def get_Stack_Memory_Operation_Status(result):
@@ -223,6 +224,20 @@ def get_list_text_line_last_index(input_list, text):
     for idx, line in enumerate(input_list):
         if text in line:
             index = idx
+    return index
+
+def get_Device_State_Context_last_index(input_list):
+    index = None
+    if input_list is None:
+        return index
+
+    for idx, line in enumerate(input_list):
+        # logger.info(f'line: {line}')
+        if 'Error' in line:
+            index = idx
+        if '+' in line:
+            break
+    logger.info(f'index: {index}')
     return index
 
 def get_list_text_line_first_index(input_list, text):

@@ -17,7 +17,6 @@ if __name__ == '__main__':
     src_dir = r'G:\BSOD_Debug_SOP_0911\7. ACPI\7.2 DPC 0x133 1 ACPI\开发样本_DPC 0x133 1 ACPI'
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
 
-
     # start
     if not windbg.start(target=dump_file):
         assert ('FAIL')
@@ -43,9 +42,9 @@ if __name__ == '__main__':
     logger.info(f'BUGCHECK_CODE: {BUGCHECK_CODE}')
     logger.info(f'BUGCHECK_P1: {BUGCHECK_P1}')
 
-    BSOD_Supcious_Driver = Automatic_dict.get('BSOD_Supcious_Driver', None)
-    logger.info(f'BSOD_Supcious_Driver: {BSOD_Supcious_Driver}')
-    # if BUGCHECK_CODE == '9f' and BSOD_Supcious_Driver and BSOD_Supcious_Driver == 'ACPI' or MODULE_NAME == 'ACPI':
+    BSOD_Suspicious_Driver = Automatic_dict.get('BSOD_Suspicious_Driver', None)
+    logger.info(f'BSOD_Suspicious_Driver: {BSOD_Suspicious_Driver}')
+    # if BUGCHECK_CODE == '9f' and BSOD_Suspicious_Driver and BSOD_Suspicious_Driver == 'ACPI' or MODULE_NAME == 'ACPI':
     logger.info(f'7.ACPI')
     ACPI_run(step_dict, current_step=7)
     total_dict['ACPI'] = step_dict

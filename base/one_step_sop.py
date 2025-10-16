@@ -76,9 +76,9 @@ def one_process_run(dump_file, path_dir):
 
         # 7. ACPI
         step_dict = {}
-        # BSOD_Supcious_Driver = Automatic_dict.get('BSOD_Supcious_Driver', None)
-        # logger.info(f'BSOD_Supcious_Driver: {BSOD_Supcious_Driver}')
-        # if BUGCHECK_CODE == '9f' and BSOD_Supcious_Driver and BSOD_Supcious_Driver == 'ACPI' or MODULE_NAME == 'ACPI':
+        # BSOD_Suspicious_Driver = Automatic_dict.get('BSOD_Suspicious_Driver', None)
+        # logger.info(f'BSOD_Suspicious_Driver: {BSOD_Suspicious_Driver}')
+        # if BUGCHECK_CODE == '9f' and BSOD_Suspicious_Driver and BSOD_Suspicious_Driver == 'ACPI' or MODULE_NAME == 'ACPI':
         logger.info(f'7.ACPI')
         ACPI_run(step_dict, current_step=7)
         total_dict['ACPI'] = step_dict
@@ -88,8 +88,8 @@ def one_process_run(dump_file, path_dir):
 
         # 8. NDIS
         step_dict = {}
-        # BSOD_Supcious_Driver = result_dict.get('BSOD_Supcious_Driver', None)
-        # if BSOD_Supcious_Driver == 'NDIS Driver':
+        # BSOD_Suspicious_Driver = result_dict.get('BSOD_Suspicious_Driver', None)
+        # if BSOD_Suspicious_Driver == 'NDIS Driver':
         logger.info(f'8.NDIS')
         ndis_run(step_dict, current_step=8)
         total_dict['NDIS'] = step_dict
@@ -99,8 +99,8 @@ def one_process_run(dump_file, path_dir):
 
         # 9. USB
         step_dict = {}
-        # BSOD_Supcious_Device = result_dict.get('BSOD_Supcious_Device', None)
-        # if BSOD_Supcious_Device == 'USB':
+        # BSOD_Suspicious_Device = result_dict.get('BSOD_Suspicious_Device', None)
+        # if BSOD_Suspicious_Device == 'USB':
         logger.info(f'9.USB')
         usb_run(step_dict, current_step=9)
         total_dict['USB'] = step_dict
@@ -110,7 +110,7 @@ def one_process_run(dump_file, path_dir):
         if BUGCHECK_CODE == '124':
             step_dict = {}
             logger.info(f'10.WHEA_0x124')
-            WHEA_0x124_run(step_dict, BUGCHECK_CODE, current_step=10)
+            WHEA_0x124_run(step_dict, BUGCHECK_P2, current_step=10)
             total_dict['WHEA_0x124'] = step_dict
 
             step_dict_str = update_WHEA_0x124_dict(step_dict)
@@ -139,7 +139,7 @@ def one_process_run(dump_file, path_dir):
         # 13. DPC_0x133
         if BUGCHECK_CODE == '133':
             step_dict = {}
-            step_dict['BSOD_Supcious_Driver'] = MODULE_NAME
+            step_dict['BSOD_Suspicious_Driver'] = MODULE_NAME
             logger.info(f'13.dpc')
             dpc_run(step_dict, Automatic_dict, current_step=13)
 

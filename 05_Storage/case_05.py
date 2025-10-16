@@ -8,7 +8,7 @@ path_dir = os.path.dirname(__file__)
 
 
 if __name__ == '__main__':
-    src_dir = r'G:\BSOD_Debug_SOP_0911\5. Storage\5.3 SW Hung 0xEF Locks NTFS Disk Retried Failed Request'
+    src_dir = r'G:\BSOD_Debug_SOP_0911\5. Storage\5.1 Disk_0x7A_SurpriseRemoval'
 
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
     # tool_log_file = os.path.join(src_dir, 'hello.log')
