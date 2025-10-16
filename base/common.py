@@ -116,6 +116,7 @@ def update_Power_0x9f_3_dict(result_dict):
     dict_str = 'Power_0x9f_3: \n'
     content_list = ['The_Power_Management_Status_Abnormal',
                     'BSOD_Suspicious_Device',
+                    'BSOD_Suspicious_Driver',
                     'blocked_device_ServiceName',
                     'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
@@ -132,6 +133,7 @@ def update_Power_0x9f_4_dict(result_dict):
                     'nt!PopFxActivateDevice_Status',
                     'blocked_IRP_address_status',
                     'BSOD_Suspicious_Device',
+                    'BSOD_Suspicious_Driver',
                     'blocked_device_ServiceName',
                     'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',

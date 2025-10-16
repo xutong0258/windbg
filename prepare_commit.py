@@ -1,6 +1,6 @@
 import os
 import shutil
-# from util import *
+from base.util import *
 
 BASEDIR = os.path.dirname(__file__)
 print(f'BASEDIR:{BASEDIR}')
@@ -22,6 +22,11 @@ def file_walk():
     # 要遍历的文件夹路径
     folder_path = BASEDIR
     for root, dirs, files in os.walk(folder_path):
+        for dir in dirs:
+            path = os.path.join(root, dir)
+            if '.' in path and '.git' not in path and '.idea' not in path:
+                print(f"del: {path}")
+                delete_folder(path)
         for file in files:
             file_path = os.path.join(root, file)
             # print(file_path)
