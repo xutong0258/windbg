@@ -88,7 +88,11 @@ def powertriage(result_dict, current_step):
     logger.info(f'BSOD_Suspicious_Driver: {blocked_IRP_Driver}')
 
     blocked_device_ServiceName = result_dict.get('blocked_device_ServiceName', None)
+    logger.info(f'blocked_device_ServiceName: {blocked_device_ServiceName}')
+
     blocked_device_DeviceInst = result_dict.get('blocked_device_DeviceInst', None)
+    logger.info(f'blocked_device_DeviceInst: {blocked_device_DeviceInst}')
+
     if blocked_device_ServiceName and blocked_device_DeviceInst:
         BSOD_Suspicious_Device =  f'{blocked_device_ServiceName} {blocked_device_DeviceInst}'
         result_dict['BSOD_Suspicious_Device'] = BSOD_Suspicious_Device

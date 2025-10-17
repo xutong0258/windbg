@@ -435,16 +435,37 @@ def get_file_content_list(file_path):
         logger.info(f"发生错误: {e}")
     return log_lines
 
+def get_file_content_list_remove_empty_line(file_path):
+    log_lines = []
+    try:
+        # 以只读模式打开文件并读取所有内容
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            log_lines = f.readlines()  # 列表形式存储每一行日志，保留换行符
+    except FileNotFoundError:
+        logger.info(f"未找到文件: {file_path}")
+    except Exception as e:
+        logger.info(f"发生错误: {e}")
+    if log_lines:
+        for line in log_lines:
+            new_line = line.replace('\n', '').strip()
+            # logger.info(f"new_line: {new_line}")
+            if new_line == '':
+                log_lines.remove(line)
+                # logger.info(f"removed_line:")
+
+    # logger.info(f"log_lines:{log_lines}")
+    return log_lines
+
 
 if __name__ == '__main__':
+    file_path = 'tmp.yaml'
+    log_lines = get_file_content_list_remove_empty_line(file_path)
+    log_str = ''.join(log_lines)
+    result_yaml_file = 'hello.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+
+    wrtie_file(result_yaml_file, log_str)
     # change_file_format()
     # change_file_dict()
     # covert_rope_cfg()
     # rope_analysis()
-    current_enable = False
-    if current_enable:
-        data_dict = {}
-        file = r'D:/hello.yaml'
-        dump_file(file, data_dict)
-    else:
-        pass

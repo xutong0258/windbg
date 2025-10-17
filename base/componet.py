@@ -52,14 +52,16 @@ def dpc_run(result_dict, Automatic_dict, current_step):
     return
 
 def PnP_run(result_dict, current_step):
-    # cmd = "!pnptriage"
+    # "!pnptriage"
     pnptriage(result_dict, current_step)
 
+    # !irp blocked_IRP_address
     blocked_IRP_Address = result_dict.get('blocked_IRP_Address', None)
     blocked_device_Address = None
     if blocked_IRP_Address:
         blocked_device_Address = irp_blocked_IRP_Address(result_dict, blocked_IRP_Address, current_step)
 
+    # !devstack blocked_device_Address
     if blocked_device_Address:
         devstack_blocked_device_Address(result_dict, blocked_device_Address, current_step)
 
@@ -80,6 +82,9 @@ def PnP_run(result_dict, current_step):
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
 
     PnP_blocked_IRP_address_status = result_dict.get('PnP_blocked_IRP_address_status', None)
+
+    # !powertriage
+    powertriage(result_dict, current_step)
 
     PnP_Status_Abnormal = 0
     if PnP_blocked_IRP_address_status or Pending_Removal_Status:
@@ -363,8 +368,12 @@ def current_thread_run(result_dict, current_step):
     cmd = "!thread"
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
-    # # time.sleep(15)
     result_dict['thread_Context'] = cmd_output
+
+    cmd = "!running -it"
+    logger.info(f'cmd: {cmd}')
+    cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
+    result_dict['running_Context'] = cmd_output
     return
 
 def system_info_run(result_dict, current_step):
@@ -413,12 +422,18 @@ def WHEA_0x124_run(result_dict, BUGCHECK_P2, current_step):
     cmd_output_list = cmd_output.splitlines()
 
     WHEA_ERROR_RECORD_Type = get_list_text_line(cmd_output_list, 'Notify Type')
+    CPU_Status_Abnormal = 0
     if WHEA_ERROR_RECORD_Type:
         WHEA_ERROR_RECORD_Type = WHEA_ERROR_RECORD_Type.replace('Notify Type', '').strip()
         WHEA_ERROR_RECORD_Type = WHEA_ERROR_RECORD_Type.replace(':', '').strip()
         logger.info(f'WHEA_ERROR_RECORD_Type: {WHEA_ERROR_RECORD_Type}')
         result_dict['WHEA_ERROR_RECORD_Type'] = WHEA_ERROR_RECORD_Type
         result_dict['BSOD_Suspicious_Device'] = WHEA_ERROR_RECORD_Type
+        if 'Machine Check Exception' == WHEA_ERROR_RECORD_Type:
+            CPU_Status_Abnormal = 1
+
+    result_dict['CPU_Status_Abnormal'] = CPU_Status_Abnormal
+    logger.info(f'CPU_Status_Abnormal: {CPU_Status_Abnormal}')
 
     # !WHEA
     cmd = f"!WHEA"
@@ -426,8 +441,6 @@ def WHEA_0x124_run(result_dict, BUGCHECK_P2, current_step):
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
     # logger.info(f'WHEA cmd_output: {cmd_output}')
     result_dict['WHEA_Context'] = cmd_output
-
-
     return
 
 def Power_0x9f_3_run(result_dict, Automatic_dict, current_step):

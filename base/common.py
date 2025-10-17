@@ -39,6 +39,7 @@ def update_Automatic_debug_report(result_dict):
     step_dict = {}
     content_list = ['Bugcheck_Analysis',
                     'FAILURE_BUCKET_ID',
+                    'MODULE_NAME',
                     'STACK_TEXT',
                     'Trap_Frame_Context',
                     ]
@@ -51,14 +52,9 @@ def update_Automatic_debug_report(result_dict):
     result_yaml_file = os.path.join('./', result_yaml_file)
     fileOP.dump_file(result_yaml_file, step_dict)
 
-    log_lines = fileOP.get_file_content_list(result_yaml_file)
-    log_lines_str = '\n'.join(log_lines)
-    # dict_str = 'Automatic Analysis: \n'
-    #
-    # for content in content_list:
-    #     value = result_dict.get(content, '')
-    #     value = str(value)
-    #     dict_str = dict_str + f'  {content}: ' + f'{value}' + '\n'
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+
     return log_lines_str
 
 def update_Sysinfo_debug_data(result_dict):
@@ -79,7 +75,7 @@ def update_Sysinfo_debug_report(result_dict):
     for content in content_list:
         value = result_dict.get(content, '')
         tmp_dict[content] = value
-    step_dict['Sysinfo:'] = tmp_dict
+    step_dict['Sysinfo'] = tmp_dict
 
     result_yaml_file = 'tmp.yaml'
     result_yaml_file = os.path.join('./', result_yaml_file)
@@ -87,6 +83,26 @@ def update_Sysinfo_debug_report(result_dict):
 
     log_lines = fileOP.get_file_content_list(result_yaml_file)
     log_lines_str = '\n'.join(log_lines)
+    return log_lines_str
+
+def update_Current_Thread_report(result_dict):
+    tmp_dict = {}
+    step_dict = {}
+    content_list = ['thread_Context',
+                    'running_Context',
+                    ]
+    for content in content_list:
+        value = result_dict.get(content, '')
+        tmp_dict[content] = value
+    step_dict['Current Thread'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+
     return log_lines_str
 
 def update_Storage_debug_data(result_dict):
@@ -110,7 +126,8 @@ def update_Storage_debug_data(result_dict):
     return dict_str
 
 def update_Storage_debug_report(result_dict):
-    dict_str = 'Storage: \n'
+    tmp_dict = {}
+    step_dict = {}
     content_list = ['storadapter_adapter1_driver',
                     'storadapter_adapter1_Context',
                     'storadapter_adapter2_driver',
@@ -124,9 +141,17 @@ def update_Storage_debug_report(result_dict):
                     ]
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['Storage'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+
+    return log_lines_str
 
 def update_PnP_debug_data(result_dict):
     dict_str = 'PnP: \n'
@@ -139,6 +164,29 @@ def update_PnP_debug_data(result_dict):
         value = str(value)
         dict_str = dict_str + f'  {content}: ' + value + '\n'
     return dict_str
+
+def update_PnP_debug_report(result_dict):
+    content_list = ['Pending_Removal_Context',
+                    'BSOD_Suspicious_Driver',
+                    'BSOD_Suspicious_Device',
+                    'System_State_Context',
+                    'Device_State_Context',
+                    ]
+    tmp_dict = {}
+    step_dict = {}
+    for content in content_list:
+        value = result_dict.get(content, '')
+        tmp_dict[content] = value
+    step_dict['PnP'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+
+    return log_lines_str
 
 def update_ACPI_debug_data(result_dict):
     dict_str = 'ACPI: \n'
@@ -153,7 +201,7 @@ def update_ACPI_debug_data(result_dict):
     return dict_str
 
 def update_ACPI_debug_report(result_dict):
-    dict_str = 'ACPI: \n'
+    dict_str = 'ACPI\n'
     content_list = ['ACPI_Method_Object',
                     'ACPI_Method_AMLPointer',
                     'ACPI_Method_Context',
@@ -177,15 +225,23 @@ def update_NDIS_debug_data(result_dict):
     return dict_str
 
 def update_NDIS_debug_report(result_dict):
-    dict_str = 'NDIS: \n'
+    tmp_dict = {}
+    step_dict = {}
     content_list = ['NDIS_OID_Context',
                     'NDIS_netadapter1_Context',
                     'NDIS_netadapter2_Context',]
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['NDIS'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
 
 def update_WHEA_0x124_debug_data(result_dict):
     dict_str = 'WHEA_0x124: \n'
@@ -200,15 +256,23 @@ def update_WHEA_0x124_debug_data(result_dict):
     return dict_str
 
 def update_WHEA_0x124_debug_report(result_dict):
-    dict_str = 'WHEA_0x124: \n'
     content_list = ['WHEA_ERROR_RECORD_Type',
                     'WHEA_ERROR_RECORD_context',
                     ]
+    tmp_dict = {}
+    step_dict = {}
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['WHEA_0x124'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
 
 def update_Power_0x9f_3_debug_data(result_dict):
     dict_str = 'Power_0x9f_3: \n'
@@ -226,7 +290,6 @@ def update_Power_0x9f_3_debug_data(result_dict):
     return dict_str
 
 def update_Power_0x9f_3_debug_report(result_dict):
-    dict_str = 'Power_0x9f_3: \n'
     content_list = ['blocked_device_ServiceName',
                     'blocked_device_Context',
                     'blocked_IRP_Driver',
@@ -234,11 +297,20 @@ def update_Power_0x9f_3_debug_report(result_dict):
                     'System_State_Context',
                     'Device_State_Context',
                     ]
+    tmp_dict = {}
+    step_dict = {}
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['Power_0x9f_3'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
 
 def update_Power_0x9f_4_debug_data(result_dict):
     dict_str = 'Power_0x9f_4: \n'
@@ -258,7 +330,6 @@ def update_Power_0x9f_4_debug_data(result_dict):
     return dict_str
 
 def update_Power_0x9f_4_debug_report(result_dict):
-    dict_str = 'Power_0x9f_4: \n'
     content_list = ['blocked_device_ServiceName',
                     'blocked_device_Context',
                     'blocked_IRP_Driver',
@@ -266,11 +337,20 @@ def update_Power_0x9f_4_debug_report(result_dict):
                     'System_State_Context',
                     'Device_State_Context',
                     ]
+    tmp_dict = {}
+    step_dict = {}
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['Power_0x9f_4'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
 
 def update_locks_0xE2_debug_data(result_dict):
     dict_str = 'locks_0xE2: \n'
@@ -290,18 +370,26 @@ def update_locks_0xE2_debug_data(result_dict):
     return dict_str
 
 def update_locks_0xE2_debug_report(result_dict):
-    dict_str = 'locks_0xE2: \n'
     content_list = ['blocked_thread_context',
                     'blocked_device_ServiceName',
                     'blocked_device_Context',
                     'blocked_IRP_Driver',
                     'blocked_irp_context',
                     ]
+    tmp_dict = {}
+    step_dict = {}
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['locks_0xE2'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
 
 def update_summary_report(result_dict):
     dict_str = 'Summary: \n'
@@ -326,6 +414,11 @@ def dump_result_yaml(result_dict, BSOD_Debug_Data_str, dir_name, BSOD_Debug_repo
     result_yaml_file = os.path.join(dir_name, result_yaml_file)
     fileOP.dump_file(result_yaml_file, result_dict)
 
+    # remove multiply line issue
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    fileOP.wrtie_file(result_yaml_file, log_lines_str)
+
     result_yaml_file = 'BSOD_Debug_Data.yaml'
     result_yaml_file = os.path.join(dir_name, result_yaml_file)
     fileOP.wrtie_file(result_yaml_file, BSOD_Debug_Data_str)
@@ -348,13 +441,17 @@ def parse_blocked_IRP_Address(cmd_output_list, result_dict):
         if index is not None:
             # 偏移3行
             blocked_IRP_Driver = cmd_output_list[index+2].strip()
-            # logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
+            logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
             split_list = blocked_IRP_Driver.split('\t')
             blocked_IRP_Driver = split_list[0]
-            # logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
+            logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
             last_index = get_list_text_line_last_index(blocked_IRP_Driver, '\\')
             blocked_IRP_Driver = blocked_IRP_Driver[last_index+1:]
             logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
+            if ',' in blocked_IRP_Driver:
+                split_list = blocked_IRP_Driver.split(',')
+                blocked_IRP_Driver = split_list[0]
+                logger.info(f'blocked_IRP_Driver: {blocked_IRP_Driver}')
             result_dict['blocked_IRP_Driver'] = blocked_IRP_Driver
 
             # 偏移2行

@@ -222,7 +222,7 @@ if __name__ == "__main__":
 
         # 保持运行
         try:
-            # time.sleep(30)
+            time.sleep(30)
         except KeyboardInterrupt:
             print("Stopping...")
 
