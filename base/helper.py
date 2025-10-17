@@ -158,7 +158,7 @@ def get_storadapter_driver_and_address(input_line, result_dict, index):
 
         storadapter_adapter_driver = split_list[0]
         result_dict[f'storadapter_adapter{index}_driver'] = storadapter_adapter_driver
-        logger.info(f'storadapter_adapter_driver: {storadapter_adapter_driver}')
+        logger.info(f'storadapter_adapter{index}_driver: {storadapter_adapter_driver}')
 
         for idx, line in enumerate(split_list):
             if '' != line and idx > 0:

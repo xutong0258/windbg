@@ -10,6 +10,7 @@ logger.info(f'path_dir: {path_dir}')
 def copy_files():
     files = ['tmp.log',
              'BSOD_Debug_Data.yaml',
+             'BSOD_Debug_Report.yaml',
              'result.yaml',
              'step_command.yaml',
              'command_dict.yaml']
@@ -24,8 +25,8 @@ file = r'D:\input.yaml'
 src_dir_list = fileOP.get_file_content_list(file)
 logger.info(f'src_dir_list: {src_dir_list}')
 
-# src_dir_list = [r'G:\BSOD_Debug_SOP_0911\14. Locks_0xe2\14.3 开发样本_SW Hung 0xEF Locks NTFS Disk Retried Failed Request',
-#                 ]
+src_dir_list = [r'G:\BSOD_Debug_SOP_0911\14. Locks_0xe2\14.3 开发样本_SW Hung 0xEF Locks NTFS Disk Retried Failed Request',
+                ]
 
 if __name__ == '__main__':
     for src_dir in src_dir_list:

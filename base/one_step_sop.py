@@ -10,21 +10,43 @@ from base.cell_command import *
 def one_process_run(dump_file, path_dir):
     # start
     if not windbg.start(target=dump_file):
-        return
+        assert ('FAIL')
 
     try:
         step_dict = {}
         Automatic_dict = {}
         total_dict = {}
-        debug_data_dict_str = ''
+        debug_data_str = ''
+        sumarry_dict = {}
+
+        debug_report_str = ''
+
+        #default
+        content_list = ['BSOD_Suspicious_Driver',
+                        'BSOD_Suspicious_Device',
+                        'CPU_Status_Abnormal',
+                        'Memory_Status_Abnormal',
+                        'Disk_Status_Abnormal',
+                        'Current_Thread_Power_Status_Abnormal',
+                        'Locked_Thread_Power_Status_Abnormal',
+                        'ACPI_Status_Abnormal',
+                        'NDIS_Status_Abnormal',]
+        for item in content_list:
+            sumarry_dict[item] = ''
 
         # 1. Automatic
         logger.info(f'1.Automatic')
         analyze_v_run(Automatic_dict, current_step=1)
         total_dict['Automatic Analysis'] = Automatic_dict
 
-        step_dict_str = update_Automatic_dict_str(Automatic_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        step_dict_str = update_Automatic_debug_data(Automatic_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
+
+        sumarry_dict['Memory_Status_Abnormal'] = Automatic_dict.get('Memory_Status_Abnormal', '')
+        sumarry_dict['Disk_Status_Abnormal'] = Automatic_dict.get('Disk_Status_Abnormal', '')
+
+        step_dict_str = update_Automatic_debug_report(Automatic_dict)
+        debug_report_str = debug_report_str + step_dict_str + '\n'
 
         BUGCHECK_CODE = Automatic_dict.get('BUGCHECK_CODE', None)
         BUGCHECK_P1 = Automatic_dict.get('BUGCHECK_P1', None)
@@ -41,8 +63,11 @@ def one_process_run(dump_file, path_dir):
         total_dict['Sysinfo'] = step_dict
         # logger.info(f'total_dict:{total_dict}')
 
-        step_dict_str = update_Sysinfo_dict_str(step_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        step_dict_str = update_Sysinfo_debug_data(step_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
+        
+        step_dict_str = update_Sysinfo_debug_report(step_dict)
+        debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 3. Current Thread
         step_dict = {}
@@ -62,17 +87,20 @@ def one_process_run(dump_file, path_dir):
         storage_run(step_dict, Automatic_dict, current_step=5)
         total_dict['Storage'] = step_dict
 
-        step_dict_str = update_Storage_dict_str(step_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        step_dict_str = update_Storage_debug_data(step_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
 
+        step_dict_str = update_Storage_debug_report(step_dict)
+        debug_report_str = debug_report_str + step_dict_str + '\n'
+        
         # 6. PnP
         step_dict = {}
         logger.info(f'6.PnP')
         PnP_run(step_dict, current_step=6)
         total_dict['PnP'] = step_dict
 
-        step_dict_str = update_PnP_dict_str(step_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        step_dict_str = update_PnP_debug_data(step_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
 
         # 7. ACPI
         step_dict = {}
@@ -83,8 +111,12 @@ def one_process_run(dump_file, path_dir):
         ACPI_run(step_dict, current_step=7)
         total_dict['ACPI'] = step_dict
 
-        step_dict_str = update_ACPI_dict(step_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        step_dict_str = update_ACPI_debug_data(step_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
+        sumarry_dict['ACPI_Status_Abnormal'] = step_dict.get('ACPI_Status_Abnormal', '')
+
+        step_dict_str = update_ACPI_debug_report(step_dict)
+        debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 8. NDIS
         step_dict = {}
@@ -94,8 +126,12 @@ def one_process_run(dump_file, path_dir):
         ndis_run(step_dict, current_step=8)
         total_dict['NDIS'] = step_dict
 
-        step_dict_str = update_NDIS_dict(step_dict)
-        debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+        step_dict_str = update_NDIS_debug_data(step_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
+        sumarry_dict['NDIS_Status_Abnormal'] = step_dict.get('NDIS_Status_Abnormal', '')
+        
+        step_dict_str = update_NDIS_debug_report(step_dict)
+        debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 9. USB
         step_dict = {}
@@ -113,8 +149,11 @@ def one_process_run(dump_file, path_dir):
             WHEA_0x124_run(step_dict, BUGCHECK_P2, current_step=10)
             total_dict['WHEA_0x124'] = step_dict
 
-            step_dict_str = update_WHEA_0x124_dict(step_dict)
-            debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+            step_dict_str = update_WHEA_0x124_debug_data(step_dict)
+            debug_data_str = debug_data_str + step_dict_str + '\n'
+
+            step_dict_str = update_WHEA_0x124_debug_report(step_dict)
+            debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 11. Power_0x9f_3
         if BUGCHECK_CODE == '9f' and BUGCHECK_P1 == '3':
@@ -123,8 +162,13 @@ def one_process_run(dump_file, path_dir):
             Power_0x9f_3_run(step_dict, Automatic_dict,current_step=11)
             total_dict['Power_0x9f_3'] = step_dict
 
-            step_dict_str = update_Power_0x9f_3_dict(step_dict)
-            debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+            step_dict_str = update_Power_0x9f_3_debug_data(step_dict)
+            debug_data_str = debug_data_str + step_dict_str + '\n'
+            sumarry_dict['BSOD_Suspicious_Driver'] = step_dict.get('BSOD_Suspicious_Driver', '')
+            sumarry_dict['BSOD_Suspicious_Device'] = step_dict.get('BSOD_Suspicious_Device', '')
+            
+            step_dict_str = update_Power_0x9f_3_debug_report(step_dict)
+            debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 12. Power_0x9f_4
         if BUGCHECK_CODE == '9f' and BUGCHECK_P1 == '4':
@@ -133,8 +177,13 @@ def one_process_run(dump_file, path_dir):
             Power_0x9f_4_run(step_dict, Automatic_dict, current_step=12)
             total_dict['Power_0x9f_3'] = step_dict
 
-            step_dict_str = update_Power_0x9f_4_dict(step_dict)
-            debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
+            step_dict_str = update_Power_0x9f_4_debug_data(step_dict)
+            debug_data_str = debug_data_str + step_dict_str + '\n'
+            sumarry_dict['BSOD_Suspicious_Driver'] = step_dict.get('BSOD_Suspicious_Driver', '')
+            sumarry_dict['BSOD_Suspicious_Device'] = step_dict.get('BSOD_Suspicious_Device', '')
+            
+            step_dict_str = update_Power_0x9f_4_debug_report(step_dict)
+            debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 13. DPC_0x133
         if BUGCHECK_CODE == '133':
@@ -144,6 +193,8 @@ def one_process_run(dump_file, path_dir):
             dpc_run(step_dict, Automatic_dict, current_step=13)
 
             total_dict['dpc'] = step_dict
+            sumarry_dict['BSOD_Suspicious_Driver'] = step_dict.get('BSOD_Suspicious_Driver', '')
+            sumarry_dict['BSOD_Suspicious_Device'] = step_dict.get('BSOD_Suspicious_Device', '')
 
         # 14. locks_0xE2
         if BUGCHECK_CODE == 'e2':
@@ -152,11 +203,17 @@ def one_process_run(dump_file, path_dir):
             locks_run(step_dict, current_step=14)
             total_dict['locks_0xE2'] = step_dict
 
-            step_dict_str = update_locks_0xE2_dict(step_dict)
-            debug_data_dict_str = debug_data_dict_str + step_dict_str + '\n'
-
+            step_dict_str = update_locks_0xE2_debug_data(step_dict)
+            debug_data_str = debug_data_str + step_dict_str + '\n'
+            sumarry_dict['BSOD_Suspicious_Driver'] = step_dict['BSOD_Suspicious_Driver']
+            
+            step_dict_str = update_locks_0xE2_debug_report(step_dict)
+            debug_report_str = debug_report_str + step_dict_str + '\n'
     finally:
         windbg.stop(path_dir)
 
-    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
+    step_dict_str = update_summary_report(sumarry_dict)
+    debug_report_str = step_dict_str + '\n' +debug_report_str
+
+    dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str)
     return

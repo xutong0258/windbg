@@ -24,19 +24,44 @@ if __name__ == '__main__':
         step_dict = {}
         Automatic_dict = {}
         total_dict = {}
-        debug_data_dict = {}
+        debug_data_str = ''
+        sumarry_dict = {}
+
+        debug_report_str = ''
+
+        #default
+        content_list = ['BSOD_Suspicious_Driver',
+                        'BSOD_Suspicious_Device',
+                        'CPU_Status_Abnormal',
+                        'Memory_Status_Abnormal',
+                        'Disk_Status_Abnormal',
+                        'Current_Thread_Power_Status_Abnormal',
+                        'Locked_Thread_Power_Status_Abnormal',
+                        'ACPI_Status_Abnormal',
+                        'NDIS_Status_Abnormal',]
+        for item in content_list:
+            sumarry_dict[item] = ''
 
         # 1. Automatic
         logger.info(f'1.Automatic')
         analyze_v_run(Automatic_dict, current_step=1)
         total_dict['Automatic Analysis'] = Automatic_dict
 
-        debug_data_dict_str = update_Automatic_dict_str(Automatic_dict)
+        step_dict_str = update_Automatic_debug_data(Automatic_dict)
+        debug_data_str = debug_data_str + step_dict_str + '\n'
 
+        sumarry_dict['Memory_Status_Abnormal'] = Automatic_dict.get('Memory_Status_Abnormal', '')
+        sumarry_dict['Disk_Status_Abnormal'] = Automatic_dict.get('Disk_Status_Abnormal', '')
+
+        step_dict_str = update_Automatic_debug_report(Automatic_dict)
+        debug_report_str = debug_report_str + step_dict_str + '\n'
 
     finally:
         windbg.stop(path_dir)
-    
-    dump_result_yaml(total_dict, debug_data_dict_str, path_dir)
+
+    step_dict_str = update_summary_report(sumarry_dict)
+    debug_report_str = step_dict_str + '\n' + debug_report_str
+
+    dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str)
 
     pass
