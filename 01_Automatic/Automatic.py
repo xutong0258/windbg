@@ -11,4 +11,4 @@ if __name__ == '__main__':
     src_dir = r'G:\BSOD_Debug_SOP_0911\1. Automatic\1.2 0x1A_Call Stack MI'
     dump_file = os.path.join(src_dir, 'MEMORY.DMP')
 
-    one_process_run(dump_file, path_dir, step_only=1)
+    one_process_run(dump_file, path_dir, step_only=3)

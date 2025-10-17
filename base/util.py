@@ -3,12 +3,6 @@ import os
 from base.logger import *
 
 def delete_folder(folder_path):
-    """
-    删除指定的文件夹，包括其中的所有文件和子文件夹
-    
-    参数:
-        folder_path: 要删除的文件夹路径
-    """
     try:
         # 检查文件夹是否存在
         if not os.path.exists(folder_path):

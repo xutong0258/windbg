@@ -80,7 +80,7 @@ def one_process_run(dump_file, path_dir, step_only=15):
             current_thread_run(step_dict, current_step=3)
             total_dict['Current Thread'] = step_dict
 
-            step_dict_str = update_Current_Thread_report(Automatic_dict)
+            step_dict_str = update_Current_Thread_report(step_dict)
             debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 4. Process

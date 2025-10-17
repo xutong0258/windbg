@@ -37,4 +37,6 @@ command_sleep_map = {
     'errrec': 10,
     'irp': 10,
     'usb_tree': 25,
+    'thread': 5,
+    'running': 5,
 }

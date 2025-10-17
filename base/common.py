@@ -82,7 +82,7 @@ def update_Sysinfo_debug_report(result_dict):
     fileOP.dump_file(result_yaml_file, step_dict)
 
     log_lines = fileOP.get_file_content_list(result_yaml_file)
-    log_lines_str = '\n'.join(log_lines)
+    log_lines_str = ''.join(log_lines)
     return log_lines_str
 
 def update_Current_Thread_report(result_dict):

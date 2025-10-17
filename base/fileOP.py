@@ -368,7 +368,7 @@ def dump_file(file_name, data) -> int:
     """
     # file_name = os.path.join(file_path, file_name)
     with open(file_name, 'w', encoding='utf-8') as wf:
-        yaml.safe_dump(data, wf, default_flow_style=False, allow_unicode=True)
+        yaml.safe_dump(data, wf, default_flow_style=False, allow_unicode=True, sort_keys=False)
     return 0
 
 
@@ -392,7 +392,7 @@ def read_file_str(file_name):
     # 打开文件，返回一个文件对象
     with open(file_name, 'r', encoding='gbk') as file:
         # 读取文件的全部内容
-        content = file.read ()
+        content = file.read()
         # my_log.info(content)
     return content
 
