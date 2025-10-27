@@ -201,16 +201,27 @@ def update_ACPI_debug_data(result_dict):
     return dict_str
 
 def update_ACPI_debug_report(result_dict):
-    dict_str = 'ACPI\n'
-    content_list = ['ACPI_Method_Object',
-                    'ACPI_Method_AMLPointer',
-                    'ACPI_Method_Context',
+    content_list = ['Pending_Removal_Context',
+                    'BSOD_Suspicious_Driver',
+                    'BSOD_Suspicious_Device',
+                    'System_State_Context',
+                    'Device_State_Context',
                     ]
+    tmp_dict = {}
+    step_dict = {}
     for content in content_list:
         value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + value + '\n'
-    return dict_str
+        tmp_dict[content] = value
+    step_dict['ACPI'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+
+    return log_lines_str
 
 def update_NDIS_debug_data(result_dict):
     dict_str = 'NDIS: \n'
@@ -401,7 +412,8 @@ def update_summary_report(result_dict):
                     'Current_Thread_Power_Status_Abnormal',
                     'Locked_Thread_Power_Status_Abnormal',
                     'ACPI_Status_Abnormal',
-                    'NDIS_Status_Abnormal', ]
+                    'NDIS_Status_Abnormal',
+                    'CPUID']
     for content in content_list:
         value = result_dict.get(content, '')
         value = str(value)
@@ -489,11 +501,11 @@ def get_blocked_IRP_Address_thread(cmd_output_list, result_dict):
 
 def get_blocked_IRP_Address_pnp(cmd_output_list, result_dict):
     blocked_IRP_Address = None
+    PnP_blocked_IRP_address_status = 0
     if cmd_output_list:
         result_str = '\n' + '\n'.join(cmd_output_list)
         result_dict['Locks_thread_context'] = result_str
 
-        PnP_blocked_IRP_address_status = 0
         for idx, line in enumerate(cmd_output_list):
             line = line.strip()
             if 'IRP List' in line:

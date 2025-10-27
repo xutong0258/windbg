@@ -19,7 +19,7 @@ def remove_cache(folder_path, dst_dir='cache__'):
 
 
 def file_walk():
-    # 要遍历的文件夹路径
+    # 要遍历的文件路径
     folder_path = BASEDIR
     for root, dirs, files in os.walk(folder_path):
         for dir in dirs:

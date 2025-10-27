@@ -5,7 +5,7 @@ from base.helper import *
 from base.componet import *
 from base.AdvancedWinDbgInterface import *
 from base.cell_command import *
-
+from base.util import *
 
 def one_process_run(dump_file, path_dir, step_only=15):
     # start
@@ -33,7 +33,8 @@ def one_process_run(dump_file, path_dir, step_only=15):
                         'WHEA_Status_Abnormal',
                         'PnP_Status_Abnormal',
                         'ACPI_Status_Abnormal',
-                        'NDIS_Status_Abnormal',]
+                        'NDIS_Status_Abnormal',
+                        'CPUID']
         for item in content_list:
             sumarry_dict[item] = ''
 
@@ -66,6 +67,9 @@ def one_process_run(dump_file, path_dir, step_only=15):
             system_info_run(step_dict, current_step=2)
             total_dict['Sysinfo'] = step_dict
             # logger.info(f'total_dict:{total_dict}')
+
+            sumarry_dict['CPUID'] = step_dict.get('CPUID', '')
+            logger.info(f'sumarry_dict:{sumarry_dict}')
 
             step_dict_str = update_Sysinfo_debug_data(step_dict)
             debug_data_str = debug_data_str + step_dict_str + '\n'
@@ -244,4 +248,7 @@ def one_process_run(dump_file, path_dir, step_only=15):
     debug_report_str = step_dict_str + '\n' +debug_report_str
 
     dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str)
+
+    # solution_check_run(path_dir, sumarry_dict)
+    post_report_process(path_dir)
     return

@@ -13,7 +13,8 @@ def copy_files():
              'BSOD_Debug_Report.yaml',
              'result.yaml',
              'step_command.yaml',
-             'command_dict.yaml']
+             'command_dict.yaml',
+             'solution.yaml',]
     src_files = []
     for item in files:
         file = os.path.join(path_dir, item)
@@ -23,10 +24,10 @@ def copy_files():
 
 file = r'D:\input.yaml'
 src_dir_list = fileOP.get_file_content_list(file)
-logger.info(f'src_dir_list: {src_dir_list}')
+# logger.info(f'src_dir_list: {src_dir_list}')
 
-# src_dir_list = [r'G:\BSOD_Debug_SOP_0911\14. Locks_0xe2\14.3 开发样本_SW Hung 0xEF Locks NTFS Disk Retried Failed Request',
-#                 ]
+src_dir_list = [r'G:\BSOD_Debug_SOP_0911\7. ACPI\7.2 DPC 0x133 1 ACPI\开发样本_DPC 0x133 1 ACPI',
+                ]
 
 if __name__ == '__main__':
     for src_dir in src_dir_list:

@@ -307,33 +307,6 @@ def is_string_present(file_path: str, target_string: str, case_sensitive: bool =
         logger.info(f"警告: 读取文件失败 - {file_path}，错误信息: {str(e)}")
         return False
 
-def parse_file_by_pattern(text, file_path, patterns) -> list:
-    # 1. 读取附件文件（替换为你的文件路径）
-    # file_path = "3.log"  # 附件文件名，如3.log
-    if text is None:
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                text = f.read()
-        except FileNotFoundError:
-            logger.info(f"错误：未找到文件{file_path}")
-            exit()
-        except Exception as e:
-            logger.info(f"错误：读取文件失败，原因：{e}")
-            exit()
-
-    # 3. 提取结果（处理可能的匹配失败）
-    results = {}
-    for key, pattern in patterns.items():
-        match = re.search(pattern, text)
-        if match:
-            results[key] = match.group(1)  # 取捕获组的内容（即字段后面的值）
-        else:
-            results[key] = NOT_FOUND  # 处理未匹配的情况
-
-    # 4. 输出结果（直观展示）
-    # logger.info(f"解析结果：{results}")
-    return results
-
 def read_file_by_line(file_name: str) -> list:
     """
     读取文本用例数据
@@ -370,18 +343,6 @@ def dump_file(file_name, data) -> int:
     with open(file_name, 'w', encoding='utf-8') as wf:
         yaml.safe_dump(data, wf, default_flow_style=False, allow_unicode=True, sort_keys=False)
     return 0
-
-
-def read_json_dict(file_name: str) -> dict:
-    """
-    读取文本用例数据
-    :param file_name: 文件路径
-    :return: list
-    """
-    data_dic = {}
-    with open(file_name, 'r') as wf:
-        data_dic = json.load(wf)
-    return data_dic
 
 def read_file_str(file_name):
     """
@@ -458,14 +419,36 @@ def get_file_content_list_remove_empty_line(file_path):
 
 
 if __name__ == '__main__':
-    file_path = 'tmp.yaml'
-    log_lines = get_file_content_list_remove_empty_line(file_path)
-    log_str = ''.join(log_lines)
-    result_yaml_file = 'hello.yaml'
-    result_yaml_file = os.path.join('./', result_yaml_file)
+    file_name = 'BSOD_Debug_Report.yaml'
+    result_dic = read_file_dict(file_name)
+    summary_dic = result_dic.get('Summary', {})
+    BSOD_Suspicious_Driver = summary_dic.get('BSOD_Suspicious_Driver', {})
+    logger.info(f'BSOD_Suspicious_Driver:{BSOD_Suspicious_Driver}')
 
-    wrtie_file(result_yaml_file, log_str)
-    # change_file_format()
-    # change_file_dict()
-    # covert_rope_cfg()
-    # rope_analysis()
+    file_name = 'BSOD_Cause_Driver_Matrix.json'
+    data_dic = read_file_dict(file_name)
+    solution_Categories = data_dic.get('Categories')
+
+    tmp_dict = data_dic.get('Groups', [])
+    logger.info(f"tmp_dict:{tmp_dict}")
+
+    out_Category = None
+    for key, cell_dict in tmp_dict.items():
+        logger.info(f"key:{key}, value:{cell_dict}")
+        Category = cell_dict.get('Category', None)
+        logger.info(f"Category: {Category}")
+
+        Drivers = cell_dict.get('Drivers', [])
+        logger.info(f"Drivers: {Drivers}")
+
+        for driver in Drivers:
+            if BSOD_Suspicious_Driver in driver:
+                out_Category = Category
+                break
+        if out_Category is not None:
+            break
+
+    solution = solution_Categories.get(out_Category, None)
+    logger.info(f"solution: {solution}")
+
+
