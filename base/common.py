@@ -403,22 +403,17 @@ def update_locks_0xE2_debug_report(result_dict):
     return log_lines_str
 
 def update_summary_report(result_dict):
-    dict_str = 'Summary: \n'
-    content_list = ['BSOD_Suspicious_Driver',
-                    'BSOD_Suspicious_Device',
-                    'CPU_Status_Abnormal',
-                    'Memory_Status_Abnormal',
-                    'Disk_Status_Abnormal',
-                    'Current_Thread_Power_Status_Abnormal',
-                    'Locked_Thread_Power_Status_Abnormal',
-                    'ACPI_Status_Abnormal',
-                    'NDIS_Status_Abnormal',
-                    'CPUID']
-    for content in content_list:
-        value = result_dict.get(content, '')
-        value = str(value)
-        dict_str = dict_str + f'  {content}: ' + f'{value}' + '\n'
-    return dict_str
+    step_dict = {}
+    step_dict['Summary'] = result_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+
+    return log_lines_str
 
 def dump_result_yaml(result_dict, BSOD_Debug_Data_str, dir_name, BSOD_Debug_report_str=None):
     # last dump

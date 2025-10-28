@@ -220,7 +220,7 @@ def post_report_process(folder_path=None):
             path = os.path.join(root, dir)
             file_list = os.listdir(path)
             file = 'BSOD_Debug_Report.yaml'
-            if file in file_list:
+            if file in file_list :
                 full_path = os.path.join(path, file)
                 logger.info(f"full_path: {full_path}")
                 find_solution(path, file)
@@ -229,5 +229,5 @@ def post_report_process(folder_path=None):
 # 使用示例
 if __name__ == "__main__":
     # 要删除的文件夹路径
-    folder_path = r'D:\Windbg\common_sop\7.2 DPC 0x133 1 ACPI'
+    folder_path = r'D:\Windbg\common_sop'
     post_report_process(folder_path)

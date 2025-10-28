@@ -249,6 +249,5 @@ def one_process_run(dump_file, path_dir, step_only=15):
 
     dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str)
 
-    # solution_check_run(path_dir, sumarry_dict)
     post_report_process(path_dir)
     return
