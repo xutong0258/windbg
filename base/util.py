@@ -27,7 +27,7 @@ def delete_folder(folder_path):
         logger.info(f"删除文件夹时发生错误: {str(e)}")
 
 def solution_check_run(path_dir,input_dict):
-    rule_count = 3
+    rule_count = 10
     check_result_list = []
     for idx in range(1, rule_count):
         function_name = f'check_rule_{idx}'
@@ -38,6 +38,7 @@ def solution_check_run(path_dir,input_dict):
     return check_result_list
 
 def check_rule_1(input_dict):
+    logger.info(f'check_rule_1')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_1',
                 'Exception': 'Intel CPU',
@@ -54,6 +55,7 @@ def check_rule_1(input_dict):
     return return_dict
 
 def check_rule_2(input_dict):
+    logger.info(f'check_rule_2')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_2',
                 'Exception': 'AMD CPU',
@@ -70,13 +72,14 @@ def check_rule_2(input_dict):
     return return_dict
 
 def check_rule_3(input_dict):
+    logger.info(f'check_rule_3')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_3',
                 'Exception': 'Intel Memory',
                 'Debug Solution': 'Intel Memory BSOD Pre-Debug List'}
     CPUID = input_dict.get('CPUID', None)
     Intel_Platform_Status = 0
-    if CPUID is not None and 'intel' in CPUID.lower:
+    if CPUID is not None and 'intel' in CPUID.lower():
         Intel_Platform_Status = 1
 
     Memory_Status_Abnormal = input_dict.get('Memory_Status_Abnormal', None)
@@ -86,6 +89,7 @@ def check_rule_3(input_dict):
     return return_dict
 
 def check_rule_4(input_dict):
+    logger.info(f'check_rule_4')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_4',
                 'Exception': 'AMD Memory',
@@ -102,6 +106,7 @@ def check_rule_4(input_dict):
     return return_dict
 
 def check_rule_5(input_dict):
+    logger.info(f'check_rule_5')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_5',
                 'Exception': 'Disk',
@@ -114,13 +119,14 @@ def check_rule_5(input_dict):
     return return_dict
 
 def check_rule_6(input_dict):
+    logger.info(f'check_rule_6')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_6',
                 'Exception': 'Intel Platform',
                 'Debug Solution': '3rd Common BSOD Pre-Debug List'}
     CPUID = input_dict.get('CPUID', None)
     Intel_Platform_Status = 0
-    if CPUID is not None and 'intel' in CPUID.lower:
+    if CPUID is not None and 'intel' in CPUID.lower():
         Intel_Platform_Status = 1
         return_dict = out_dict
 
@@ -128,6 +134,7 @@ def check_rule_6(input_dict):
     return return_dict
 
 def check_rule_7(input_dict):
+    logger.info(f'check_rule_7')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_7',
                 'Exception': 'AMD Platform',
@@ -139,6 +146,7 @@ def check_rule_7(input_dict):
     return return_dict
 
 def check_rule_8(input_dict):
+    logger.info(f'check_rule_8')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_8',
                 'Exception': 'ACPI',
@@ -150,6 +158,7 @@ def check_rule_8(input_dict):
     return return_dict
 
 def check_rule_9(input_dict):
+    logger.info(f'check_rule_9')
     return_dict = None
     out_dict = {'rule_name': 'check_rule_9',
                 'Exception': 'OS',
@@ -167,7 +176,7 @@ def Suspicious_Driver_Check(BSOD_Suspicious_Driver, final_dict):
     solution_Categories = data_dic.get('Categories')
 
     tmp_dict = data_dic.get('Groups', [])
-    logger.info(f"tmp_dict:{tmp_dict}")
+    # logger.info(f"tmp_dict:{tmp_dict}")
 
     out_Category = None
     for key, cell_dict in tmp_dict.items():
@@ -193,6 +202,7 @@ def Suspicious_Driver_Check(BSOD_Suspicious_Driver, final_dict):
 def find_solution(path_dir, file_name):
     final_dict = {}
     file_name = os.path.join(path_dir, file_name)
+    logger.info(f'file_name:{file_name}')
 
     result_dic = read_file_dict(file_name)
     summary_dic = result_dic.get('Summary', {})
@@ -200,9 +210,10 @@ def find_solution(path_dir, file_name):
     check_result_list = solution_check_run(path_dir, summary_dic)
     final_dict['check_result_list'] = check_result_list
 
-    BSOD_Suspicious_Driver = summary_dic.get('BSOD_Suspicious_Driver', {})
+    BSOD_Suspicious_Driver = summary_dic.get('BSOD_Suspicious_Driver', None)
     logger.info(f'BSOD_Suspicious_Driver:{BSOD_Suspicious_Driver}')
-    if BSOD_Suspicious_Driver is not None:
+
+    if BSOD_Suspicious_Driver is not None and BSOD_Suspicious_Driver.strip() != '':
         Suspicious_Driver_Check(BSOD_Suspicious_Driver, final_dict)
 
     result_yaml_file = 'solution.yaml'
@@ -228,5 +239,5 @@ def post_report_process(folder_path=None):
 # 使用示例
 if __name__ == "__main__":
     # 要删除的文件夹路径
-    folder_path = r'D:\Windbg\11_power_0x9f_3'
+    folder_path = r'D:\Windbg\common_sop'
     post_report_process(folder_path)

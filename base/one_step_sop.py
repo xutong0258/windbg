@@ -72,7 +72,7 @@ def one_process_run(dump_file, path_dir, step_only=15):
             # logger.info(f'total_dict:{total_dict}')
 
             sumarry_dict['CPUID'] = step_dict.get('CPUID', '')
-            logger.info(f'sumarry_dict:{sumarry_dict}')
+            # logger.info(f'sumarry_dict:{sumarry_dict}')
 
             step_dict_str = update_Sysinfo_debug_data(step_dict)
             debug_data_str = debug_data_str + step_dict_str + '\n'
