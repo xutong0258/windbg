@@ -26,8 +26,8 @@ file = r'D:\input.yaml'
 src_dir_list = fileOP.get_file_content_list(file)
 # logger.info(f'src_dir_list: {src_dir_list}')
 
-# src_dir_list = [r'G:\BSOD_Debug_SOP_0911\7. ACPI\7.2 DPC 0x133 1 ACPI\开发样本_DPC 0x133 1 ACPI',
-#                 ]
+src_dir_list = [r'G:\BSOD_Debug_SOP_0911\7. ACPI\7.2 DPC 0x133 1 ACPI\开发样本_DPC 0x133 1 ACPI',
+                ]
 
 if __name__ == '__main__':
     for src_dir in src_dir_list:
@@ -55,5 +55,5 @@ if __name__ == '__main__':
         create_ok = create_folder(result_dir)
         if create_ok:
             one_process_run(dump_file, path_dir)
-            copy_files()
+            copy_files(result_dir)
             post_report_process(result_dir)

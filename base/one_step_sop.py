@@ -22,9 +22,10 @@ def one_process_run(dump_file, path_dir, step_only=15):
         debug_report_str = ''
 
         #default
-        content_list = ['BSOD_Suspicious_Driver',
-                        'BSOD_Suspicious_Device',
-                        'Current_Thread_Power_Status_Abnormal',
+        sumarry_dict['BSOD_Suspicious_Driver'] = ''
+        sumarry_dict['BSOD_Suspicious_Device'] = ''
+
+        content_list = ['Current_Thread_Power_Status_Abnormal',
                         'Locked_Thread_Power_Status_Abnormal',
                         'The_Power_Management_Status_Abnormal',
                         'CPU_Status_Abnormal',
@@ -34,9 +35,11 @@ def one_process_run(dump_file, path_dir, step_only=15):
                         'PnP_Status_Abnormal',
                         'ACPI_Status_Abnormal',
                         'NDIS_Status_Abnormal',
-                        'CPUID']
+                        ]
         for item in content_list:
-            sumarry_dict[item] = ''
+            sumarry_dict[item] = 0
+
+        sumarry_dict['CPUID'] = ''
 
         # 1. Automatic
         logger.info(f'1.Automatic')
@@ -169,6 +172,9 @@ def one_process_run(dump_file, path_dir, step_only=15):
             usb_run(step_dict, current_step=9)
             total_dict['USB'] = step_dict
 
+            step_dict_str = update_usb_debug_report(step_dict)
+            debug_report_str = debug_report_str + step_dict_str + '\n'
+
 
         # 10. WHEA_0x124
         if BUGCHECK_CODE == '124' and (step_only == 15 or step_only == 10):
@@ -227,6 +233,9 @@ def one_process_run(dump_file, path_dir, step_only=15):
             total_dict['dpc'] = step_dict
             sumarry_dict['BSOD_Suspicious_Driver'] = step_dict.get('BSOD_Suspicious_Driver', '')
             sumarry_dict['BSOD_Suspicious_Device'] = step_dict.get('BSOD_Suspicious_Device', '')
+
+            step_dict_str = update_dpc_debug_report(step_dict)
+            debug_report_str = debug_report_str + step_dict_str + '\n'
 
         # 14. locks_0xE2
         if BUGCHECK_CODE == 'e2' and (step_only == 15 or step_only == 14):

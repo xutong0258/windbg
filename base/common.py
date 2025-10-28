@@ -40,11 +40,18 @@ def update_Automatic_debug_report(result_dict):
     content_list = ['Bugcheck_Analysis',
                     'FAILURE_BUCKET_ID',
                     'MODULE_NAME',
-                    'STACK_TEXT',
+                    'Disk_Status_Abnormal',
+                    'Memory_Status_Abnormal',
+                    'DISK_HARDWARE_ERROR_Status',
+                    'Context_Memory_Corruption_Status',
+                    'Stack_Memory_Operation_Status',
                     'Trap_Frame_Context',
+                    'STACK_TEXT',
                     ]
     for content in content_list:
         value = result_dict.get(content, '')
+        if 'STACK_TEXT' in content:
+            value = value.replace('STACK_TEXT', '\n')
         tmp_dict[content] = value
     step_dict['Automatic Analysis'] = tmp_dict
 
@@ -88,7 +95,12 @@ def update_Sysinfo_debug_report(result_dict):
 def update_Current_Thread_report(result_dict):
     tmp_dict = {}
     step_dict = {}
-    content_list = ['thread_Context',
+    content_list = ['Current_Thread_Power_Status_Abnormal',
+                    'blocked_IRP_address_status',
+                    'nt!PopFxActivateDevice_Status',
+                    'BSOD_Suspicious_Driver',
+                    'BSOD_Suspicious_Device',
+                    'thread_Context',
                     'running_Context',
                     ]
     for content in content_list:
@@ -128,7 +140,17 @@ def update_Storage_debug_data(result_dict):
 def update_Storage_debug_report(result_dict):
     tmp_dict = {}
     step_dict = {}
-    content_list = ['storadapter_adapter1_driver',
+    content_list = ['Disk1_Status_Abnormal',
+                    'Storclass_FDO1_DeviceID',
+                    'Storclass_FDO1_Failed_Requests_Status',
+                    'storadapter_adapter1_SurpriseRemoval_Status',
+                    'storadapter_storunit1_Outstanding_IRP_Status',
+                    'Disk2_Status_Abnormal',
+                    'Storclass_FDO2_DeviceID',
+                    'Storclass_FDO2_Failed_Requests_Status',
+                    'storadapter_adapter2_SurpriseRemoval_Status',
+                    'storadapter_storunit2_Outstanding_IRP_Status',
+                    'storadapter_adapter1_driver',
                     'storadapter_adapter1_Context',
                     'storadapter_adapter2_driver',
                     'storadapter_adapter2_Context',
@@ -238,13 +260,34 @@ def update_NDIS_debug_data(result_dict):
 def update_NDIS_debug_report(result_dict):
     tmp_dict = {}
     step_dict = {}
-    content_list = ['NDIS_OID_Context',
+    content_list = ['NDIS_Status_Abnormal',
+                    'NDIS_OID_Pending_Status',
+                    'Ndis_netadapter1_name',
+                    'Ndis_netadapter2_name',
+                    'NDIS_OID_Context',
                     'NDIS_netadapter1_Context',
                     'NDIS_netadapter2_Context',]
     for content in content_list:
         value = result_dict.get(content, '')
         tmp_dict[content] = value
     step_dict['NDIS'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
+
+def update_usb_debug_report(result_dict):
+    tmp_dict = {}
+    step_dict = {}
+    content_list = ['usb_tree_Context',]
+    for content in content_list:
+        value = result_dict.get(content, '')
+        tmp_dict[content] = value
+    step_dict['USB'] = tmp_dict
 
     result_yaml_file = 'tmp.yaml'
     result_yaml_file = os.path.join('./', result_yaml_file)
@@ -267,8 +310,12 @@ def update_WHEA_0x124_debug_data(result_dict):
     return dict_str
 
 def update_WHEA_0x124_debug_report(result_dict):
-    content_list = ['WHEA_ERROR_RECORD_Type',
-                    'WHEA_ERROR_RECORD_context',
+    content_list = ['WHEA_Status_Abnormal',
+                    'CPU_Status_Abnormal',
+                    'BSOD_Suspicious_Device',
+                    'WHEA_ERROR_RECORD_Type',
+                    'WHEA_ERROR_RECORD_Context',
+                    'WHEA_Context',
                     ]
     tmp_dict = {}
     step_dict = {}
@@ -301,9 +348,13 @@ def update_Power_0x9f_3_debug_data(result_dict):
     return dict_str
 
 def update_Power_0x9f_3_debug_report(result_dict):
-    content_list = ['blocked_device_ServiceName',
-                    'blocked_device_Context',
+    content_list = ['The_Power_Management_Status_Abnormal',
+                    'BSOD_Suspicious_Device',
+                    'BSOD_Suspicious_Driver',
+                    'blocked_device_ServiceName',
+                    'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
+                    'blocked_device_Context',
                     'blocked_irp_context',
                     'System_State_Context',
                     'Device_State_Context',
@@ -341,9 +392,15 @@ def update_Power_0x9f_4_debug_data(result_dict):
     return dict_str
 
 def update_Power_0x9f_4_debug_report(result_dict):
-    content_list = ['blocked_device_ServiceName',
-                    'blocked_device_Context',
+    content_list = ['The_Power_Management_Status_Abnormal',
+                    'nt!PopFxActivateDevice_Status',
+                    'blocked_IRP_address_status',
+                    'BSOD_Suspicious_Device',
+                    'BSOD_Suspicious_Driver',
+                    'blocked_device_ServiceName',
+                    'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
+                    'blocked_device_Context',
                     'blocked_irp_context',
                     'System_State_Context',
                     'Device_State_Context',
@@ -354,6 +411,28 @@ def update_Power_0x9f_4_debug_report(result_dict):
         value = result_dict.get(content, '')
         tmp_dict[content] = value
     step_dict['Power_0x9f_4'] = tmp_dict
+
+    result_yaml_file = 'tmp.yaml'
+    result_yaml_file = os.path.join('./', result_yaml_file)
+    fileOP.dump_file(result_yaml_file, step_dict)
+
+    log_lines = fileOP.get_file_content_list_remove_empty_line(result_yaml_file)
+    log_lines_str = ''.join(log_lines)
+    return log_lines_str
+
+def update_dpc_debug_report(result_dict):
+    content_list = ['The_DPC_Status_Abnormal',
+                    'swd_DPCTimeout_CPU',
+                    'swd_DPCTimeout_Context',
+                    'dpcwatchdog_context',
+                    'DPCTimeout_thread_Context',
+                    ]
+    tmp_dict = {}
+    step_dict = {}
+    for content in content_list:
+        value = result_dict.get(content, '')
+        tmp_dict[content] = value
+    step_dict['DPC_0x133'] = tmp_dict
 
     result_yaml_file = 'tmp.yaml'
     result_yaml_file = os.path.join('./', result_yaml_file)
@@ -381,11 +460,15 @@ def update_locks_0xE2_debug_data(result_dict):
     return dict_str
 
 def update_locks_0xE2_debug_report(result_dict):
-    content_list = ['blocked_thread_context',
+    content_list = ['locks_thread_Status_Abnormal',
+                    'blocked_IRP_address_status',
+                    'nt!PopFxActivateDevice_Status',
+                    'BSOD_Suspicious_Device',
+                    'BSOD_Suspicious_Driver',
                     'blocked_device_ServiceName',
-                    'blocked_device_Context',
+                    'blocked_device_DeviceInst',
                     'blocked_IRP_Driver',
-                    'blocked_irp_context',
+                    'blocked_thread_context',
                     ]
     tmp_dict = {}
     step_dict = {}
@@ -744,7 +827,7 @@ def parse_amli_lc(cmd_output_list, result_dict):
     ACPI_Method_Object = ''
     ACPI_Method_Status = 0
     for item in cmd_output_list:
-        # logger.info(f"item: {item}")
+        logger.info(f"item: {item}")
         if 'Ctxt=' in item:
             ACPI_Method_Address = re.findall(r'Ctxt=(.*?),', item)
             ACPI_Method_Address = ACPI_Method_Address[0]

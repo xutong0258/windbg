@@ -31,7 +31,7 @@ command_sleep_map = {
     'storadapter': 6,
     'devstack': 15,
     'powertriage': 28, # 30
-    'amli lc': 10,
+    'amli lc': 15,
     'locks': 10,
     '!WHEA': 10,
     'errrec': 10,
@@ -39,4 +39,5 @@ command_sleep_map = {
     'usb_tree': 25,
     'thread': 5,
     'running': 5,
+    'amli r': 15,
 }

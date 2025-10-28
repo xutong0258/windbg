@@ -9,6 +9,8 @@ from base.AdvancedWinDbgInterface import *
 from base.cell_command import *
 
 def dpc_run(result_dict, Automatic_dict, current_step):
+    result_dict['The_DPC_Status_Abnormal'] = 1
+
     cmd = "!swd"
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
@@ -374,6 +376,9 @@ def current_thread_run(result_dict, current_step):
     logger.info(f'cmd: {cmd}')
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
     result_dict['running_Context'] = cmd_output
+
+    Current_Thread_Power_Status_Abnormal = 0
+    result_dict['Current_Thread_Power_Status_Abnormal'] = Current_Thread_Power_Status_Abnormal
     return
 
 def system_info_run(result_dict, current_step):

@@ -212,22 +212,21 @@ def find_solution(path_dir, file_name):
     return
 
 def post_report_process(folder_path=None):
+    logger.info(f"post_report_process: {folder_path}")
     # folder_path = r'D:\0_LOG_VIP\0_Result_1019'
     # folder_path = r'D:\0_LOG_VIP\test'
 
     for root, dirs, files in os.walk(folder_path):
-        for dir in dirs:
-            path = os.path.join(root, dir)
-            file_list = os.listdir(path)
-            file = 'BSOD_Debug_Report.yaml'
-            if file in file_list :
-                full_path = os.path.join(path, file)
-                logger.info(f"full_path: {full_path}")
-                find_solution(path, file)
+        target_file = 'BSOD_Debug_Report.yaml'
+        for file in files:
+            if file == target_file:
+                logger.info(f"root: {root}")
+                find_solution(root, file)
+
     return
 
 # 使用示例
 if __name__ == "__main__":
     # 要删除的文件夹路径
-    folder_path = r'D:\Windbg\common_sop'
+    folder_path = r'D:\Windbg\11_power_0x9f_3'
     post_report_process(folder_path)
