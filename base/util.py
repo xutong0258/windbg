@@ -34,7 +34,7 @@ def solution_check_run(path_dir,input_dict):
         return_dict = eval(function_name)(input_dict)
         if return_dict:
             check_result_list.append(return_dict)
-            break
+            continue
     return check_result_list
 
 def check_rule_1(input_dict):
@@ -113,6 +113,7 @@ def check_rule_5(input_dict):
                 'Debug Solution': 'Disk BSOD Pre-Debug List'}
 
     Disk_Status_Abnormal = input_dict.get('Disk_Status_Abnormal', None)
+    logger.info(f"Disk_Status_Abnormal: {Disk_Status_Abnormal}")
     if Disk_Status_Abnormal and Disk_Status_Abnormal == 1:
         return_dict = out_dict
     logger.info(f"return_dict: {return_dict}")
@@ -206,6 +207,7 @@ def find_solution(path_dir, file_name):
 
     result_dic = read_file_dict(file_name)
     summary_dic = result_dic.get('Summary', {})
+    logger.info(f"summary_dic: {summary_dic}")
 
     check_result_list = solution_check_run(path_dir, summary_dic)
     final_dict['check_result_list'] = check_result_list
@@ -239,5 +241,5 @@ def post_report_process(folder_path=None):
 # 使用示例
 if __name__ == "__main__":
     # 要删除的文件夹路径
-    folder_path = r'D:\Windbg\common_sop'
+    folder_path = r'C:\Users\15319\Desktop\1101\5.1 Disk_0x7A_SurpriseRemoval'
     post_report_process(folder_path)
