@@ -97,7 +97,7 @@ def one_process_run(dump_file, path_dir, step_only=15):
             process_vm_run(step_dict, current_step=4)
             total_dict['Process'] = step_dict
 
-        # 5. Storage
+        # 5. Storage, Disk
         if step_only == 15 or step_only == 5:
             step_dict = {}
             logger.info(f'5.Storage')
@@ -246,7 +246,9 @@ def one_process_run(dump_file, path_dir, step_only=15):
 
             step_dict_str = update_locks_0xE2_debug_data(step_dict)
             debug_data_str = debug_data_str + step_dict_str + '\n'
-            sumarry_dict['BSOD_Suspicious_Driver'] = step_dict['BSOD_Suspicious_Driver']
+            BSOD_Suspicious_Driver = step_dict.get('BSOD_Suspicious_Driver', None)
+            if BSOD_Suspicious_Driver is not None:
+                sumarry_dict['BSOD_Suspicious_Driver'] = BSOD_Suspicious_Driver
             
             step_dict_str = update_locks_0xE2_debug_report(step_dict)
             debug_report_str = debug_report_str + step_dict_str + '\n'
