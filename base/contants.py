@@ -32,7 +32,7 @@ command_sleep_map = {
     'devstack': 15,
     'powertriage': 35, # 30
     'amli lc': 15,
-    'locks': 10,
+    'locks': 15,
     '!WHEA': 10,
     'errrec': 10,
     'irp': 10,

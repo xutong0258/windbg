@@ -241,5 +241,5 @@ def post_report_process(folder_path=None):
 # 使用示例
 if __name__ == "__main__":
     # 要删除的文件夹路径
-    folder_path = r'C:\Users\15319\Desktop\1101\5.1 Disk_0x7A_SurpriseRemoval'
+    folder_path = r'D:\0_LOG_VIP\Result_10_28'
     post_report_process(folder_path)

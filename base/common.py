@@ -605,11 +605,12 @@ def parse_locks_info(cmd_output_list, result_dict):
     # logger.info(f'file_content_new: {file_content_new}')
     thread_contention_pairs,Locks_thread_Address = fileOP.parse_locks_content(new_result)
     logger.info(f'thread_contention_pairs: {thread_contention_pairs}')
-    Locks_thread_Address = Locks_thread_Address.replace('-01<*>', '').strip()
-    logger.info(f'Locks_thread_Address: {Locks_thread_Address}')
+    if Locks_thread_Address is not None:
+        Locks_thread_Address = Locks_thread_Address.replace('-01<*>', '').strip()
+        logger.info(f'Locks_thread_Address: {Locks_thread_Address}')
 
-    result_dict['Locks_thread_Address'] = Locks_thread_Address
-    result_dict['blocked_thread_Address'] = Locks_thread_Address
+        result_dict['Locks_thread_Address'] = Locks_thread_Address
+        result_dict['blocked_thread_Address'] = Locks_thread_Address
 
     if Locks_thread_Address:
         result_dict['Locks_thread_Status'] = 1
