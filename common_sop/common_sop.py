@@ -3,6 +3,7 @@ from base import fileOP
 from base.common import *
 from base.componet import *
 from base.one_step_sop import *
+from base.folder_file import *
 
 path_dir = os.path.dirname(__file__)
 logger.info(f'path_dir: {path_dir}')
