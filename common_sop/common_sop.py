@@ -27,7 +27,7 @@ file = r'D:\input.yaml'
 src_dir_list = fileOP.get_file_content_list(file)
 # logger.info(f'src_dir_list: {src_dir_list}')
 
-src_dir_list = [r'G:\BSOD_Debug_SOP_0911\1. Automatic\1.1 0x3b_Context Memory Corruption',
+src_dir_list = [r'D:\hello\DumpFile\ApplicationDumps\case_1',
                 ]
 
 if __name__ == '__main__':

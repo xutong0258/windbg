@@ -1,0 +1,22 @@
+step_1_list:
+- '!analyze -v'
+step_2_list:
+- vertarget
+- '!sysinfo cpuinfo'
+- '!sysinfo cpumicrocode'
+- '!sysinfo cpuspeed'
+- '!sysinfo smbios'
+step_3_list:
+- '!thread'
+- '!running -it'
+step_4_list:
+- '!VM'
+step_5_list:
+- '.load storagekd '
+- '!storclass'
+- '!storadapter'
+step_6_list:
+- '!pnptriage'
+- '!devnode 1'
+- '!devnode 0 1'
+- '!powertriage'

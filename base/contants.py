@@ -30,7 +30,7 @@ command_sleep_map = {
     'analyze': 10,
     'storadapter': 6,
     'devstack': 15,
-    'powertriage': 35, # 30
+    'powertriage': 40, # 30
     'amli lc': 15,
     'locks': 15,
     '!WHEA': 10,
