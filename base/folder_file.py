@@ -1,13 +1,13 @@
 import shutil
 import os
-from base.fileOP import *
 from utils.logger_util import logger
+from base.contants import *
 
 BASEDIR = os.path.dirname(__file__)
 
-def file_walk_delete_file(file_format='.csv'):
+def file_walk_delete_file(file_format='.csv', folder_path = ROOT_DIR):
     # 要遍历的文件夹路径
-    folder_path = ROOT_DIR
+    # folder_path = ROOT_DIR
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             file_path = os.path.join(root, file)
@@ -37,6 +37,7 @@ def delete_folder(folder_path):
         logger.info(f"错误: 没有权限删除 '{folder_path}'")
     except Exception as e:
         logger.info(f"删除文件夹时发生错误: {str(e)}")
+    return
 
 def create_folder(folder_path):
     try:
@@ -159,12 +160,6 @@ def get_file_path_by_dir(folder_path, target_file_name):
     file_path = None
     target_file_path = None
     for root, dirs, files in os.walk(folder_path):
-        for dir in dirs:
-            path = os.path.join(root, dir)
-            if '.' in path and '.git' not in path and '.idea' not in path:
-                # print(f"del: {path}")
-                pass
-
         for file in files:
             file_path = os.path.join(root, file)
             # print(file_path)
@@ -181,12 +176,6 @@ def get_latest_file_path_by_dir(folder_path, target_file, target_file_p2=None):
     file_list = []
     file_dict = {}
     for root, dirs, files in os.walk(folder_path):
-        for dir in dirs:
-            path = os.path.join(root, dir)
-            if '.' in path and '.git' not in path and '.idea' not in path:
-                # print(f"del: {path}")
-                pass
-
         for file in files:
             file_path = os.path.join(root, file)
             # logger.info(f'file_path:{file_path}')
@@ -209,6 +198,17 @@ def get_latest_file_path_by_dir(folder_path, target_file, target_file_p2=None):
             latest_file = key
     logger.info(f"latest_file: {latest_file}")
     return latest_file
+
+def ceate_folder_with_folder():
+    # 要删除的文件夹路径
+    folder_path = r'D:\01_异常关机'
+    folder_list = os.listdir(folder_path)
+    logger.info(f'folder_list:{folder_list}')
+    target_path = r'C:\Users\15319\Desktop\1201\01_异常关机'
+    for item in folder_list:
+        full_path = os.path.join(target_path, item)
+        create_folder(full_path)
+    return
 # 使用示例
 if __name__ == "__main__":
     # 要删除的文件夹路径
