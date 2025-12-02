@@ -95,7 +95,7 @@ def PnP_run(result_dict, current_step):
     result_dict['PnP_Status_Abnormal'] = PnP_Status_Abnormal
     return
 
-def storage_run(result_dict, Automatic_dict,current_step):
+def storage_run(result_dict, Automatic_dict, clue_step, current_step):
     BUGCHECK_CODE = Automatic_dict.get('BUGCHECK_CODE', None)
     BUGCHECK_CODE = BUGCHECK_CODE.upper()
 
@@ -113,6 +113,8 @@ def storage_run(result_dict, Automatic_dict,current_step):
     parse_storclass(cmd_output_list, result_dict)
 
     Storclass_FDO1_address = result_dict.get('Storclass_FDO1_address', None)
+    clue_step.append(f'command: !storclass, get: Storclass_FDO1_address:{Storclass_FDO1_address}')
+
     if Storclass_FDO1_address:
         cmd = f"!storagekd.storclass {Storclass_FDO1_address} 2"
         logger.info(f'cmd: {cmd}')
@@ -120,6 +122,8 @@ def storage_run(result_dict, Automatic_dict,current_step):
 
         cmd_output_list = cmd_output.splitlines()
         parse_storagekd_storclass(cmd_output_list, result_dict)
+
+        clue_step.append(f'command: !storagekd.storclass {Storclass_FDO1_address} 2, get: Storclass_FDO1_Failed_Requests_Status')
 
     result_dict['Storclass_FDO2_Failed_Requests_Status'] = 0
     # todo Storclass_FDO2_address test case
@@ -136,6 +140,9 @@ def storage_run(result_dict, Automatic_dict,current_step):
             # logger.info(f'line: {line}')
             parse_storadapter_driver_and_address(cmd_output_list[idx + 2: idx + 4], result_dict)
 
+    clue_step.append(
+        f'command: !storadapter, get: storadapter_adapter1_address')
+
     # !storadapter storadapter_adapter1_address
     storadapter_adapter1_address = result_dict.get('storadapter_adapter1_address', None)
     logger.info(f'storadapter_adapter1_address: {storadapter_adapter1_address}')
@@ -146,6 +153,9 @@ def storage_run(result_dict, Automatic_dict,current_step):
 
         cmd_output_list = cmd_output.splitlines()
         parse_storadapter_storadapter_adapter1_address(cmd_output_list, result_dict)
+
+        clue_step.append(
+            f'command: !storadapter {storadapter_adapter1_address}, get: storadapter_adapter1_SurpriseRemoval_Status')
 
 
     # !storadapter storadapter_adapter2_address
@@ -159,6 +169,9 @@ def storage_run(result_dict, Automatic_dict,current_step):
 
         cmd_output_list = cmd_output.splitlines()
         parse_storadapter_storadapter_adapter2_address(cmd_output_list, result_dict)
+
+        clue_step.append(
+            f'command: !storadapter {storadapter_adapter2_address}, get: storadapter_adapter2_SurpriseRemoval_Status')
 
     storadapter_storunit1_address = result_dict.get('storadapter_storunit1_address', None)
     logger.info(f'storadapter_storunit1_address: {storadapter_storunit1_address}')
@@ -185,6 +198,10 @@ def storage_run(result_dict, Automatic_dict,current_step):
         if first_index:
             result_dict['storadapter_storunit1_Outstanding_IRP_Context'] = cmd_output_list[first_index: first_index + 6]
             storadapter_storunit1_Outstanding_IRP_Status = 1
+
+        clue_step.append(
+            f'command: !storunit {storadapter_storunit1_address}, get: storadapter_storunit1_Outstanding_IRP_Context')
+
     result_dict['storadapter_storunit1_Outstanding_IRP_Status'] = storadapter_storunit1_Outstanding_IRP_Status
     logger.info(f'storadapter_storunit1_Outstanding_IRP_Status: {storadapter_storunit1_Outstanding_IRP_Status}')
 
@@ -208,6 +225,10 @@ def storage_run(result_dict, Automatic_dict,current_step):
         if first_index:
             result_dict['storadapter_storunit2_Outstanding_IRP_Context'] = cmd_output_list[first_index: first_index + 6]
             storadapter_storunit2_Outstanding_IRP_Status = 1
+
+        clue_step.append(
+            f'command: !storunit {storadapter_storunit2_address}, get: storadapter_storunit2_Outstanding_IRP_Context')
+
     result_dict['storadapter_storunit2_Outstanding_IRP_Status'] = storadapter_storunit2_Outstanding_IRP_Status
 
     storadapter_adapter1_SurpriseRemoval_Status = result_dict.get('storadapter_adapter1_SurpriseRemoval_Status', 0)
@@ -305,15 +326,17 @@ def ndis_run_power_4(result_dict, current_step):
     cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
     return
 
-def locks_run(result_dict, current_step):
+def locks_run(result_dict, clue_step, current_step):
     # !Locks
     blocked_thread_Address = locks(result_dict, current_step)
     logger.info(f'blocked_thread_Address: {blocked_thread_Address}')
+    clue_step.append(f'command: !Locks, get: blocked_thread_Address: {blocked_thread_Address}')
 
     # !thread blocked_thread_Address
     blocked_IRP_Address = thread_blocked_thread_Address(result_dict, blocked_thread_Address, current_step)
-
     logger.info(f'blocked_IRP_Address: {blocked_IRP_Address}')
+
+    clue_step.append(f'command: !thread {blocked_thread_Address}, get: blocked_IRP_Address: {blocked_IRP_Address}')
 
     blocked_device_Address = None
     blocked_IRP_address_status = 0
@@ -321,8 +344,9 @@ def locks_run(result_dict, current_step):
         blocked_IRP_address_status = 1
         # !irp blocked_IRP_Address
         blocked_device_Address = irp_blocked_IRP_Address(result_dict, blocked_IRP_Address, current_step)
-
         logger.info(f'blocked_device_Address: {blocked_device_Address}')
+
+        clue_step.append(f'command: !irp {blocked_IRP_Address}, get: blocked_device_Address: {blocked_device_Address}')
 
     result_dict['blocked_IRP_address_status'] = blocked_IRP_address_status
 
@@ -339,6 +363,10 @@ def locks_run(result_dict, current_step):
     if blocked_IRP_address_status or PopFxActivateDevice_Status:
         locks_thread_Status_Abnormal = 1
     result_dict['locks_thread_Status_Abnormal'] = locks_thread_Status_Abnormal
+
+    BSOD_Suspicious_Driver = result_dict.get('BSOD_Suspicious_Driver', None)
+    clue_step.append(f'BSOD_Suspicious_Driver = blocked_IRP_Driver; BSOD_Suspicious_Driver = {BSOD_Suspicious_Driver}')
+
     return
 def process_vm_run(result_dict, current_step):
     cmd = "!VM"

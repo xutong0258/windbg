@@ -15,7 +15,7 @@ from base.common import *
 from base.AdvancedWinDbgInterface import *
 
 
-def analyze_v_run(result_dict, current_step):
+def analyze_v_run(result_dict, clue_step, current_step):
     # time.sleep(3)  # 等待初始化
     cmd = "!analyze -v"
     logger.info(f'cmd: {cmd}')
@@ -24,6 +24,7 @@ def analyze_v_run(result_dict, current_step):
     # logger.info(f'cmd_output type:\n{cmd_output}')
 
     parse_analyze_v(cmd_output, result_dict)
+    clue_step.append(f'command: !analyze -v, get: BUGCHECK_Code, BUGCHECK_P1-BUGCHECK_P4, FAILURE_BUCKET_ID')
     return
 
 def thread_blocked_thread_Address(result_dict,blocked_thread_Address, current_step):

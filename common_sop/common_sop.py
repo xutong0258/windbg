@@ -15,6 +15,7 @@ def copy_files(result_dir):
              'result.yaml',
              'step_command.yaml',
              'command_dict.yaml',
+             'clue.yaml',
              ]
     src_files = []
     for item in files:
@@ -27,7 +28,7 @@ file = r'D:\input.yaml'
 src_dir_list = fileOP.get_file_content_list(file)
 # logger.info(f'src_dir_list: {src_dir_list}')
 
-src_dir_list = [r'G:\BSOD_Debug_SOP_0911\4. Process\4.1 SW Hung 0xEF Locks rtux64w10',
+src_dir_list = [r'G:\BSOD_Debug_SOP_0911\6. PnP\6.1 SW Hung 0xEF Locks NTFS Disk Retried Failed Request',
                 ]
 
 if __name__ == '__main__':

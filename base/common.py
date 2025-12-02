@@ -500,7 +500,7 @@ def update_summary_report(result_dict):
 
     return log_lines_str
 
-def dump_result_yaml(result_dict, BSOD_Debug_Data_str, dir_name, BSOD_Debug_report_str=None):
+def dump_result_yaml(result_dict, BSOD_Debug_Data_str, dir_name, BSOD_Debug_report_str, clue_step_dict):
     # last dump
     result_yaml_file = 'result.yaml'
     result_yaml_file = os.path.join(dir_name, result_yaml_file)
@@ -519,6 +519,10 @@ def dump_result_yaml(result_dict, BSOD_Debug_Data_str, dir_name, BSOD_Debug_repo
         result_yaml_file = 'BSOD_Debug_Report.yaml'
         result_yaml_file = os.path.join(dir_name, result_yaml_file)
         fileOP.wrtie_file(result_yaml_file, BSOD_Debug_report_str)
+
+    result_yaml_file = 'clue.yaml'
+    result_yaml_file = os.path.join(dir_name, result_yaml_file)
+    fileOP.dump_file(result_yaml_file, clue_step_dict)
 
     return
 

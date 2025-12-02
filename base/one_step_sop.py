@@ -6,6 +6,20 @@ from base.componet import *
 from base.AdvancedWinDbgInterface import *
 from base.cell_command import *
 from base.util import *
+from base.step_analyze_v import Analyze_v
+from base.step_system_info import System_info
+from base.step_current_thread import Current_thread
+from base.step_process_vm import Process_vm
+from base.step_storage import Storage
+from base.step_pnp import PnP
+from base.step_ACPI import ACPI
+from base.step_NDIS import NDIS
+from base.step_USB import USB
+from base.step_WHEA import WHEA_0x124
+from base.step_Power_0x9f_3 import Power_0x9f_3
+from base.step_Power_0x9f_4 import Power_0x9f_4
+from base.step_DPC import DPC
+
 
 def one_process_run(dump_file, path_dir, step_only=15):
     # start
@@ -16,6 +30,7 @@ def one_process_run(dump_file, path_dir, step_only=15):
         step_dict = {}
         Automatic_dict = {}
         total_dict = {}
+        clue_step_dict = {}
         debug_data_str = ''
         sumarry_dict = {}
 
@@ -43,8 +58,14 @@ def one_process_run(dump_file, path_dir, step_only=15):
 
         # 1. Automatic
         logger.info(f'1.Automatic')
-        analyze_v_run(Automatic_dict, current_step=1)
+        clue_step = []
+
+        step_obj = Analyze_v()
+        step_obj.run(Automatic_dict, clue_step, current_step=1)
+        # analyze_v_run(Automatic_dict, clue_step, current_step=1)
+
         total_dict['Automatic Analysis'] = Automatic_dict
+        clue_step_dict['Automatic Analysis'] = clue_step
 
         step_dict_str = update_Automatic_debug_data(Automatic_dict)
         debug_data_str = debug_data_str + step_dict_str + '\n'
@@ -67,7 +88,11 @@ def one_process_run(dump_file, path_dir, step_only=15):
         # 2. Sysinfo
         if step_only == 15 or step_only == 2:
             logger.info(f'2.Sysinfo')
-            system_info_run(step_dict, current_step=2)
+
+            step_obj = System_info()
+            step_obj.run(step_dict, current_step=2)
+            # system_info_run(step_dict, current_step=2)
+
             total_dict['Sysinfo'] = step_dict
             # logger.info(f'total_dict:{total_dict}')
 
@@ -84,7 +109,11 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if step_only == 15 or step_only == 3:
             step_dict = {}
             logger.info(f'3.Current Thread')
-            current_thread_run(step_dict, current_step=3)
+
+            step_obj = Current_thread()
+            step_obj.run(step_dict, current_step=3)
+
+            # current_thread_run(step_dict, current_step=3)
             total_dict['Current Thread'] = step_dict
 
             step_dict_str = update_Current_Thread_report(step_dict)
@@ -94,15 +123,25 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if step_only == 15 or step_only == 4:
             step_dict = {}
             logger.info(f'4.Process')
-            process_vm_run(step_dict, current_step=4)
+
+            step_obj = Process_vm()
+            step_obj.run(step_dict, current_step=4)
+
+            # process_vm_run(step_dict, current_step=4)
             total_dict['Process'] = step_dict
 
         # 5. Storage, Disk
         if step_only == 15 or step_only == 5:
             step_dict = {}
+            clue_step = []
             logger.info(f'5.Storage')
-            storage_run(step_dict, Automatic_dict, current_step=5)
+
+            step_obj = Storage()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=5)
+
+            # storage_run(step_dict, Automatic_dict, clue_step, current_step=5)
             total_dict['Storage'] = step_dict
+            clue_step_dict['Storage'] = clue_step
 
             step_dict_str = update_Storage_debug_data(step_dict)
             debug_data_str = debug_data_str + step_dict_str + '\n'
@@ -117,7 +156,11 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if step_only == 15 or step_only == 6:
             step_dict = {}
             logger.info(f'6.PnP')
-            PnP_run(step_dict, current_step=6)
+            step_obj = PnP()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=6)
+
+            # PnP_run(step_dict, current_step=6)
+
             total_dict['PnP'] = step_dict
 
             step_dict_str = update_PnP_debug_data(step_dict)
@@ -135,7 +178,12 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if step_only == 15 or step_only == 7:
             step_dict = {}
             logger.info(f'7.ACPI')
-            ACPI_run(step_dict, current_step=7)
+
+            step_obj = ACPI()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=7)
+
+            # ACPI_run(step_dict, current_step=7)
+
             total_dict['ACPI'] = step_dict
 
             step_dict_str = update_ACPI_debug_data(step_dict)
@@ -152,7 +200,12 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if step_only == 15 or step_only == 8:
             step_dict = {}
             logger.info(f'8.NDIS')
-            ndis_run(step_dict, current_step=8)
+
+            step_obj = NDIS()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=8)
+
+            # ndis_run(step_dict, current_step=8)
+
             total_dict['NDIS'] = step_dict
 
             step_dict_str = update_NDIS_debug_data(step_dict)
@@ -169,7 +222,12 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if step_only == 15 or step_only == 9:
             step_dict = {}
             logger.info(f'9.USB')
-            usb_run(step_dict, current_step=9)
+
+            step_obj = USB()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=9)
+
+            # usb_run(step_dict, current_step=9)
+
             total_dict['USB'] = step_dict
 
             step_dict_str = update_usb_debug_report(step_dict)
@@ -180,7 +238,10 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if BUGCHECK_CODE == '124' and (step_only == 15 or step_only == 10):
             step_dict = {}
             logger.info(f'10.WHEA_0x124')
-            WHEA_0x124_run(step_dict, BUGCHECK_P2, current_step=10)
+            step_obj = WHEA_0x124()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=10)
+
+            # WHEA_0x124_run(step_dict, BUGCHECK_P2, current_step=10)
             total_dict['WHEA_0x124'] = step_dict
 
             step_dict_str = update_WHEA_0x124_debug_data(step_dict)
@@ -196,7 +257,10 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if BUGCHECK_CODE == '9f' and BUGCHECK_P1 == '3' and (step_only == 15 or step_only == 11):
             step_dict = {}
             logger.info(f'11.Power_0x9f_3')
-            Power_0x9f_3_run(step_dict, Automatic_dict,current_step=11)
+            step_obj = Power_0x9f_3()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=11)
+
+            # Power_0x9f_3_run(step_dict, Automatic_dict,current_step=11)
             total_dict['Power_0x9f_3'] = step_dict
 
             step_dict_str = update_Power_0x9f_3_debug_data(step_dict)
@@ -212,8 +276,12 @@ def one_process_run(dump_file, path_dir, step_only=15):
         if BUGCHECK_CODE == '9f' and BUGCHECK_P1 == '4' and (step_only == 15 or step_only == 12):
             step_dict = {}
             logger.info(f'12.Power_0x9f_4')
-            Power_0x9f_4_run(step_dict, Automatic_dict, current_step=12)
-            total_dict['Power_0x9f_3'] = step_dict
+
+            step_obj = Power_0x9f_4()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=12)
+
+            # Power_0x9f_4_run(step_dict, Automatic_dict, current_step=12)
+            total_dict['Power_0x9f_4'] = step_dict
 
             step_dict_str = update_Power_0x9f_4_debug_data(step_dict)
             debug_data_str = debug_data_str + step_dict_str + '\n'
@@ -228,7 +296,11 @@ def one_process_run(dump_file, path_dir, step_only=15):
             step_dict = {}
             step_dict['BSOD_Suspicious_Driver'] = MODULE_NAME
             logger.info(f'13.dpc')
-            dpc_run(step_dict, Automatic_dict, current_step=13)
+
+            step_obj = DPC()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=13)
+
+            # dpc_run(step_dict, Automatic_dict, current_step=13)
 
             total_dict['dpc'] = step_dict
             sumarry_dict['BSOD_Suspicious_Driver'] = step_dict.get('BSOD_Suspicious_Driver', '')
@@ -240,9 +312,16 @@ def one_process_run(dump_file, path_dir, step_only=15):
         # 14. locks_0xE2
         if BUGCHECK_CODE == 'e2' and (step_only == 15 or step_only == 14):
             step_dict = {}
+            clue_step = []
             logger.info(f'14.locks_0xE2')
-            locks_run(step_dict, current_step=14)
+
+            step_obj = Locks()
+            step_obj.run(step_dict, Automatic_dict, clue_step, current_step=14)
+
+            # locks_run(step_dict, clue_step, current_step=14)
+
             total_dict['locks_0xE2'] = step_dict
+            clue_step_dict['locks_0xE2'] = clue_step
 
             step_dict_str = update_locks_0xE2_debug_data(step_dict)
             debug_data_str = debug_data_str + step_dict_str + '\n'
@@ -258,5 +337,5 @@ def one_process_run(dump_file, path_dir, step_only=15):
     step_dict_str = update_summary_report(sumarry_dict)
     debug_report_str = step_dict_str + '\n' +debug_report_str
 
-    dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str)
+    dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str, clue_step_dict)
     return
