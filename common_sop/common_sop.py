@@ -27,7 +27,7 @@ file = r'D:\input.yaml'
 src_dir_list = fileOP.get_file_content_list(file)
 # logger.info(f'src_dir_list: {src_dir_list}')
 
-src_dir_list = [r'G:\BSOD_Debug_SOP_0911\1. Automatic\1.1 0x3b_Context Memory Corruption',
+src_dir_list = [r'G:\BSOD_Debug_SOP_0911\4. Process\4.1 SW Hung 0xEF Locks rtux64w10',
                 ]
 
 if __name__ == '__main__':
@@ -38,20 +38,17 @@ if __name__ == '__main__':
         logger.info(f'src_dir: {src_dir}')
         dump_file = os.path.join(src_dir, 'MEMORY.DMP')
 
-        base_dir_1 = os.path.basename(src_dir)
-        logger.info(f'base_dir_1: {base_dir_1}')
-        if r'.' in base_dir_1:
-            result_dir = os.path.join(path_dir, base_dir_1)
-            logger.info(f'result_dir: {result_dir}')
-        else:
-            parent_dir = os.path.dirname(src_dir)
-            # logger.info(f'parent_dir: {parent_dir}')
+        src_dir_list = src_dir.split('\\')
+        logger.info(f'src_dir_list: {src_dir_list}')
+        result_dir = path_dir
+        for idx, item in enumerate(src_dir_list):
+            if idx < 2:
+                continue
+            logger.info(f'item: {item}')
 
-            base_dir_2 = os.path.basename(parent_dir)
-            # logger.info(f'base_dir_2: {base_dir_2}')
-
-            result_dir = os.path.join(path_dir, base_dir_2, base_dir_1)
+            result_dir = os.path.join(result_dir, item)
             logger.info(f'result_dir: {result_dir}')
+
 
         create_ok = create_folder(result_dir)
         if create_ok:

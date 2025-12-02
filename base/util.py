@@ -195,6 +195,8 @@ def find_solution(path_dir, file_name):
     logger.info(f'BSOD_Suspicious_Driver:{BSOD_Suspicious_Driver}')
 
     if BSOD_Suspicious_Driver is not None and BSOD_Suspicious_Driver.strip() != '':
+        final_dict['BSOD_Suspicious_Driver'] = BSOD_Suspicious_Driver
+
         Suspicious_Driver_Check(BSOD_Suspicious_Driver, final_dict)
 
     result_yaml_file = 'solution.yaml'
