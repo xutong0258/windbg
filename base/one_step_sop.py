@@ -259,6 +259,4 @@ def one_process_run(dump_file, path_dir, step_only=15):
     debug_report_str = step_dict_str + '\n' +debug_report_str
 
     dump_result_yaml(total_dict, debug_data_str, path_dir, debug_report_str)
-
-    # post_report_process(path_dir)
     return

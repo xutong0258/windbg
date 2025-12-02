@@ -13,7 +13,7 @@ def remove_cache(folder_path, dst_dir='cache__'):
         for dir in dirs:
             if dst_dir in dir:
                 dir_path = os.path.join(root, dir)
-                shutil.rmtree(dir_path)
+                shuti.rmtree(dir_path)
                 print(f"del: {dir_path}")
     return
 
@@ -30,7 +30,7 @@ def file_walk():
         for file in files:
             file_path = os.path.join(root, file)
             # print(file_path)
-            if '.log' in file_path or '.yaml' in file_path:
+            if '.log' in file_path:
                 os.remove(file_path)
                 print(f"del: {file_path}")
     return

@@ -1,6 +1,6 @@
 import os
 import argparse
-from base.logger import *
+from utils.logger_util import logger
 
 def count_all_subfolders(folder_path):
     """

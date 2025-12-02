@@ -8,10 +8,9 @@ import logging
 import time
 import datetime
 import re
-import cv2
 import subprocess
 from pathlib import Path
-from base.logger import *
+from utils.logger_util import logger
 from base import fileOP
 
 # file = os.path.abspath(__file__)

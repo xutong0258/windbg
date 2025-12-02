@@ -471,6 +471,12 @@ def Power_0x9f_4_run(result_dict, Automatic_dict, current_step):
     blocked_thread_Address = Bugcheck_P3
     result_dict['blocked_thread_Address'] = blocked_thread_Address
 
+    # !poaction
+    cmd = f'!poaction'
+    logger.info(f'cmd: {cmd}')
+    cmd_output = windbg.execute_command(cmd, current_step, timeout=15)
+    result_dict['poaction_context'] = cmd_output
+
     # !thread blocked_thread_Address
     blocked_IRP_Address = thread_blocked_thread_Address(result_dict, blocked_thread_Address, current_step)
     if blocked_IRP_Address is not None:
