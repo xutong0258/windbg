@@ -6,19 +6,21 @@ from base.componet import *
 from base.AdvancedWinDbgInterface import *
 from base.cell_command import *
 from base.util import *
+
 from base.step_analyze_v import Analyze_v
 from base.step_system_info import System_info
 from base.step_current_thread import Current_thread
 from base.step_process_vm import Process_vm
 from base.step_storage import Storage
 from base.step_pnp import PnP
-from base.step_ACPI import ACPI
-from base.step_NDIS import NDIS
-from base.step_USB import USB
-from base.step_WHEA import WHEA_0x124
-from base.step_Power_0x9f_3 import Power_0x9f_3
-from base.step_Power_0x9f_4 import Power_0x9f_4
-from base.step_DPC import DPC
+from base.step_acpi import ACPI
+from base.step_ndis import NDIS
+from base.step_usb import USB
+from base.step_whea import WHEA_0x124
+from base.step_power_0x9f_3 import Power_0x9f_3
+from base.step_power_0x9f_4 import Power_0x9f_4
+from base.step_dpc import DPC
+from base.step_locks import Locks
 
 
 def one_process_run(dump_file, path_dir, step_only=15):
