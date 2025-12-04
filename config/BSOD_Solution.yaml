@@ -1,0 +1,56 @@
+OS:
+  Solution: '1. Check if the other project with same platform can repro this CPU BSOD.
+             2. Co-work with BIOS Owner to check ACPI Active Method Object and Context (Next AML Pointer).
+             3. Check if this CPU BSOD can''t repro after optimize ACPI Active Method.'
+Platform:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+VGA:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+Audio:
+  Solution: '1. Check if the other project with same audio model can repro this audio BSOD.
+             2. Co-work with audio driver owner to involve audio Vendor to debug.
+             3. Check if this AUDIO GPU BSOD can鈥榯 repro with latest audio driver version.
+             4. Check if this AUDIO GPU BSOD can鈥榯 repro with Windows in-box audio Driver.'
+LAN:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+WLAN:
+  Solution: '1. Check if this WLAN BSOD happened on single or multiple WLAN Model.
+             2. Check if the other project with same WLAN model can repro this WLAN GPU BSOD.
+             3. Co-work with WLAN Driver Owner to involve WLAN Vendor to debug.
+             4. Check if this WLAN BSOD can鈥榯 repro with latest WLAN Driver version.
+             5. Check if this WLAN BSOD can鈥榯 repro after disable WLAN PCIE Port on BIOS.
+             6. Check if this WLAN BSOD can''t repro after disable WLAN PCIE ASPM.'
+Bluetooth:
+  Solution: '1. Check if this BT BSOD happened on single or multiple BT Model .
+             2. Check if the other project with same BT model can repro this BT BSOD.
+             3. Co-work with BT Driver Owner to involve BT Vendor to debug.
+             4. Check if this BT BSOD can''t repro with latest BT driver version.
+             5. Check if this BT BSOD can''t repro after disable BT USB Port on BIOS.
+             6. Check if this BT BSOD can''t repro with Windows BT in-box Driver.
+             7. Check if this BT BSOD can''t repro after Keep BT D0.'
+CardReader:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+Camera:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+GPS:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+Pen:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'
+IGRS:
+  Solution: '1. Check if this issue only happened after updated new driver version; if yes, rollback to old driver version to repro.
+             2. Co-work with Driver Owner to involve Driver Vendor to debug.
+             3. Check if this BSOD can''t repro with latest driver version.'

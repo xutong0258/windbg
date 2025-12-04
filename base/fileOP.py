@@ -8,6 +8,9 @@ import re
 from base.helper import *
 from base.contants import *
 
+file_path = os.path.abspath(__file__)
+path_dir = os.path.dirname(file_path)
+
 def get_DPC_Timeout_Cout_cpu_P1_0(input_list):
     # logger.info(f'input_list:{input_list}')
     cpu_num = None
@@ -419,36 +422,10 @@ def get_file_content_list_remove_empty_line(file_path):
 
 
 if __name__ == '__main__':
-    file_name = 'BSOD_Debug_Report.yaml'
-    result_dic = read_file_dict(file_name)
-    summary_dic = result_dic.get('Summary', {})
-    BSOD_Suspicious_Driver = summary_dic.get('BSOD_Suspicious_Driver', {})
-    logger.info(f'BSOD_Suspicious_Driver:{BSOD_Suspicious_Driver}')
-
-    file_name = 'BSOD_Cause_Driver_Matrix.json'
-    data_dic = read_file_dict(file_name)
-    solution_Categories = data_dic.get('Categories')
-
-    tmp_dict = data_dic.get('Groups', [])
-    logger.info(f"tmp_dict:{tmp_dict}")
-
-    out_Category = None
-    for key, cell_dict in tmp_dict.items():
-        logger.info(f"key:{key}, value:{cell_dict}")
-        Category = cell_dict.get('Category', None)
-        logger.info(f"Category: {Category}")
-
-        Drivers = cell_dict.get('Drivers', [])
-        logger.info(f"Drivers: {Drivers}")
-
-        for driver in Drivers:
-            if BSOD_Suspicious_Driver in driver:
-                out_Category = Category
-                break
-        if out_Category is not None:
-            break
-
-    solution = solution_Categories.get(out_Category, None)
-    logger.info(f"solution: {solution}")
-
-
+    file = 'BSOD_Cause_Driver_Matrix.json'
+    file = os.path.join(path_dir, file)
+    result_dic = read_file_dict(file)
+    file = 'BSOD_Cause_Driver_Matrix.yaml'
+    file = os.path.join(path_dir, file)
+    dump_file(file, result_dic)
+    pass

@@ -9,19 +9,20 @@ path_dir = os.path.dirname(__file__)
 logger.info(f'path_dir: {path_dir}')
 
 def copy_files(result_dir):
-    files = ['tmp.log',
-             'BSOD_Debug_Data.yaml',
-             'BSOD_Debug_Report.yaml',
-             'result.yaml',
-             'step_command.yaml',
-             'command_dict.yaml',
-             'clue.yaml',
-             ]
     src_files = []
-    for item in files:
-        file = os.path.join(path_dir, item)
-        src_files.append(file)
+    src_file_list = os.listdir(path_dir)
+    for item in src_file_list:
+        if '.py' not in item:
+            file = os.path.join(path_dir, item)
+            src_files.append(file)
     copy_multiple_files(src_files, result_dir)
+
+    # remove file
+    for item in src_file_list:
+        if '.py' not in item:
+            file = os.path.join(path_dir, item)
+            os.remove(file)
+            logger.info(f'remove file:{file}')
     return
 
 file = r'D:\input.yaml'

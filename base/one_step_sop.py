@@ -60,14 +60,13 @@ def one_process_run(dump_file, path_dir, step_only=15):
 
         # 1. Automatic
         logger.info(f'1.Automatic')
-        clue_step = []
 
         step_obj = Analyze_v()
-        step_obj.run(Automatic_dict, clue_step, current_step=1)
+        step_obj.run(Automatic_dict, current_step=1)
         # analyze_v_run(Automatic_dict, clue_step, current_step=1)
 
         total_dict['Automatic Analysis'] = Automatic_dict
-        clue_step_dict['Automatic Analysis'] = clue_step
+
 
         step_dict_str = update_Automatic_debug_data(Automatic_dict)
         debug_data_str = debug_data_str + step_dict_str + '\n'

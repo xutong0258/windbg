@@ -184,7 +184,7 @@ class AdvancedWinDbgInterface:
             step_list_append = f'self.step_{current_step}_list.append(command)'
             eval(step_list_append)
 
-            step_list = f'self.step_{current_step}_list'
+            # step_list = f'self.step_{current_step}_list'
             # logger.info(f"Command list: {eval(step_list)}")
             # self.step_list.append(command)
 
@@ -214,6 +214,15 @@ class AdvancedWinDbgInterface:
             logger.info(f"Command error: {error}")
 
         return result
+
+    def append_clue(self, clue, current_step):
+        if current_step:
+            step_list_append = f'self.step_{current_step}_list.append(clue)'
+            eval(step_list_append)
+        return
+
+    def get_step_1(self):
+        return self.step_1_list
 
     def stop(self, dump_path):
         """停止 WinDbg"""
